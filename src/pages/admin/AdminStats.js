@@ -16,6 +16,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+
 const AdminStats = () => {
   const [stats, setStats] = useState({
     users: 0,
@@ -23,15 +24,18 @@ const AdminStats = () => {
     confirmedBookings: 0,
     pendingOrders: 0,
     cancelledOrders: 0,
-    ordersGrowth: [], // ✅ تغيير إلى ordersGrowth
-    productsWithInterest: [], // ✅ إضافة الحقل الجديد
+    ordersGrowth: [],
+    productsWithInterest: [],
   });
   const [reviews, setReviews] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
   const fetchStats = async () => {
     const res = await getStats();
     setStats(res.data);
   };
-const dashboardIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/dashboard_ajzvsa.svg";
+  const dashboardIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406947/dashboard_v8coub.svg";
   const fetchReviews = async () => {
     const res = await getReviews();
     setReviews(res.data);
@@ -40,256 +44,287 @@ const dashboardIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968
     fetchStats();
     fetchReviews();
   }, []);
-const orderData = [
-  { name: "تم التسليم", value: stats.deliveredPercentage },
-  { name: "تم الإلغاء", value: stats.cancelledPercentage },
-];
-  const pieColors = ["#6b7f4f", "#493c33", "#d15c1d"];
-  // ✅ تصفية المنتجات التي لديها راغبون (عدد > 0)
-  const interestedProducts = stats.productsWithInterest?.filter(p => p.interestedCount > 0) || [];
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  const orderData = [
+    { name: "تم التسليم", value: stats.deliveredPercentage },
+    { name: "تم الإلغاء", value: stats.cancelledPercentage },
+  ];
+  const pieColors = ["#145032", "#A52A2A"]; // Updated to palette: green for delivered, red for cancelled
+  const interestedProducts =
+    stats.productsWithInterest?.filter((p) => p.interestedCount > 0) || [];
   return (
-  <>
-    {/* ✅ الشريط الجانبي العائم (خارج تدفق الصفحة) */}
-    <AdminSidebar />
-    {/* ✅ محتوى الصفحة الأساسي */}
-    <div style={{ background: "#fff", minHeight: "100vh" }}>
-      <div style={styles.container}>
-  {/* أيقونة لوحة الإحصائيات */}
-  <div style={styles.headerIconContainer}>
-    <img src={dashboardIcon} alt="Dashboard" style={styles.headerIcon} />
-  </div>
-        {/* --- الكروت الدائرية --- */}
-        <div style={styles.statsContainer}>
-          <motion.div style={{ ...styles.statCard, background: "#6b7f4f" }} whileHover={{ scale: 1.1 }}>
-            <h3 style={styles.statValue}>{stats.users}</h3>
-            <p style={styles.statLabel}>عدد المستخدمين</p>
-          </motion.div>
-          <motion.div style={{ ...styles.statCard, background: "#493c33" }} whileHover={{ scale: 1.1 }}>
-            <h3 style={styles.statValue}>{stats.deliveredOrders}</h3>
-            <p style={styles.statLabel}>الطلبات المنفذة</p>
-          </motion.div>
-          <motion.div style={{ ...styles.statCard, background: "#d15c1d" }} whileHover={{ scale: 1.1 }}>
-            <h3 style={styles.statValue}>{stats.confirmedBookings}</h3>
-            <p style={styles.statLabel}>الحجوزات المؤكدة</p>
-          </motion.div>
-        </div>
-        {/* --- الرسوم البيانية --- */}
-        <div style={styles.chartsContainer}>
-          {/* LineChart */}
-          <div style={styles.chartBox}>
-            <h3 style={styles.chartTitle}> نمو الطلبات</h3> {/* ✅ تغيير العنوان إلى نمو الطلبات */}
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={stats.ordersGrowth}> {/* ✅ تغيير data إلى ordersGrowth */}
-                <CartesianGrid stroke="#f2a72d" strokeDasharray="5 5" />
-                <XAxis dataKey="date" /> {/* ✅ تغيير dataKey إلى date (من _id في aggregation) */}
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="orders" stroke={"#f2a72d"} strokeWidth={2} /> {/* ✅ تغيير dataKey إلى orders */}
-              </LineChart>
-            </ResponsiveContainer>
+    <>
+      <AdminSidebar />
+      <div style={{ background: "#FFFFFF", minHeight: "100vh" }}>
+        <div style={styles.container(isMobile)}>
+          <div style={styles.headerIconContainer}>
+            <img
+              src={dashboardIcon}
+              alt="Dashboard"
+              style={styles.headerIcon(isMobile)}
+            />
           </div>
-          {/* PieChart */}
-          <div style={styles.chartBox}>
-            <h3 style={styles.chartTitle}> حالة الطلبات</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-  data={orderData}
-  dataKey="value"
-  nameKey="name"
-  cx="50%"
-  cy="50%"
-  outerRadius={80}
-  label={({ name, value }) => `${name}: ${value}%`}
->
-  {orderData.map((entry, index) => (
-    <Cell key={index} fill={pieColors[index]} />
-  ))}
-</Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+          <div style={styles.statsContainer}>
+            <motion.div
+              style={{ ...styles.statCard(isMobile), background: "#145032" }} // Lush Forest Green
+              whileHover={{ scale: 1.05 }}
+            >
+              <h3 style={styles.statValue(isMobile)}>{stats.users}</h3>
+              <p style={styles.statLabel(isMobile)}>عدد المستخدمين</p>
+            </motion.div>
+            <motion.div
+              style={{ ...styles.statCard(isMobile), background: "#E1B866" }} // Sunlit Yellow
+              whileHover={{ scale: 1.05 }}
+            >
+              <h3 style={styles.statValue(isMobile)}>{stats.deliveredOrders}</h3>
+              <p style={styles.statLabel(isMobile)}>الطلبات المنفذة</p>
+            </motion.div>
+            <motion.div
+              style={{ ...styles.statCard(isMobile), background: "#FF7518" }} // Orange Mushroom
+              whileHover={{ scale: 1.05 }}
+            >
+              <h3 style={styles.statValue(isMobile)}>{stats.confirmedBookings}</h3>
+              <p style={styles.statLabel(isMobile)}>الحجوزات المؤكدة</p>
+            </motion.div>
           </div>
-        </div>
-        {/* --- المنتجات المرغوبة (جديد) --- */}
-        <h2 style={{ ...styles.title, marginTop: "40px" }}>المنتجات المرغوبة</h2>
-        <div style={styles.interestedProductsContainer}>
-          {interestedProducts.length > 0 ? (
-            interestedProducts.map((p, index) => (
-              <motion.div
-                key={index}
-                style={styles.interestedProductCard}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-              >
-                <span style={styles.interestedProductName}>{p.name}</span>
-                <div style={styles.interestedCountCircle}>{p.interestedCount}</div>
-              </motion.div>
-            ))
-          ) : (
-            <p style={styles.noInterested}>لا توجد منتجات مرغوبة بعد</p>
-          )}
-        </div>
-        {/* --- آراء العملاء --- */}
-        <h2 style={{ ...styles.title, marginTop: "40px" }}>آراء العملاء</h2>
-        <div style={styles.reviewsContainer}>
-          {reviews.length > 0 ? (
-            reviews.map((r, index) => (
-              <motion.div
-                key={r._id || index}
-                style={styles.reviewCard}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-              >
-                <h4 style={styles.reviewUser}>{r.userName}</h4>
-                <p style={styles.reviewContent}>{r.content}</p>
-                <div style={styles.reviewRatingContainer}>
-  {Array.from({ length: 5 }).map((_, i) => (
-    <span
-      key={i}
-      style={{
-        ...styles.star,
-        ...(i < r.rating ? styles.starActive : {}),
-      }}
-    >
-      ★
-    </span>
-  ))}
-</div>
-              </motion.div>
-            ))
-          ) : (
-            <p style={styles.noReviews}>لا توجد آراء بعد</p>
-          )}
+          <div style={styles.chartsContainer(isMobile)}>
+            <div style={styles.chartBox(isMobile)}>
+              <h3 style={styles.chartTitle(isMobile)}> نمو الطلبات</h3>
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
+                <LineChart data={stats.ordersGrowth}>
+                  <CartesianGrid
+                    stroke="#4B0082"
+                    strokeDasharray="3 3"
+                  />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="orders"
+                    stroke="#E1B866"
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={styles.chartBox(isMobile)}>
+              <h3 style={styles.chartTitle(isMobile)}> حالة الطلبات</h3>
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 250}>
+                <PieChart>
+                  <Pie
+                    data={orderData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={isMobile ? 60 : 80}
+                    label={({ name, value }) => `${name}: ${value}%`}
+                  >
+                    {orderData.map((entry, index) => (
+                      <Cell key={index} fill={pieColors[index]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <h2 style={{ ...styles.title(isMobile), marginTop: "40px" }}>
+            المنتجات المرغوبة
+          </h2>
+          <div style={styles.interestedProductsContainer}>
+            {interestedProducts.length > 0 ? (
+              interestedProducts.map((p, index) => (
+                <motion.div
+                  key={index}
+                  style={styles.interestedProductCard(isMobile)}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span style={styles.interestedProductName(isMobile)}>{p.name}</span>
+                  <div style={styles.interestedCountCircle(isMobile)}>
+                    {p.interestedCount}
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <p style={styles.noInterested(isMobile)}>لا توجد منتجات مرغوبة بعد</p>
+            )}
+          </div>
+          <h2 style={{ ...styles.title(isMobile), marginTop: "40px" }}>آراء العملاء</h2>
+          <div style={styles.reviewsContainer(isMobile)}>
+            {reviews.length > 0 ? (
+              reviews.map((r, index) => (
+                <motion.div
+                  key={r._id || index}
+                  style={styles.reviewCard(isMobile)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <h4 style={styles.reviewUser(isMobile)}>{r.userName}</h4>
+                  <p style={styles.reviewContent(isMobile)}>{r.content}</p>
+                  <div style={styles.reviewRatingContainer}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          ...styles.star(isMobile),
+                          ...(i < r.rating ? styles.starActive : {}),
+                        }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <p style={styles.noReviews(isMobile)}>لا توجد آراء بعد</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 };
 export default AdminStats;
 const styles = {
-  container: {
+  container: (isMobile) => ({
     flex: 1,
-    background: "#f1ebcc",
-    padding: "15px",
+    background: "rgba(2, 37, 26, 0.05)", // Light Deep Jungle Green for subtle background
+    padding: isMobile ? "10px" : "20px",
     fontFamily: fonts.primary,
+    maxWidth: isMobile ? "100%" : "1200px",
+    margin: "0 auto",
+  }),
+  reviewRatingContainer: {
+    display: "flex",
+    gap: "4px",
+    marginTop: "8px",
   },
-reviewRatingContainer: {
-  display: "flex",
-  gap: "3px",
-  marginTop: "5px",
-},
-star: {
-  fontSize: "18px",
-  color: "#6b7f4f", // خلفية النجم غير المفعّل
-},
-starActive: {
-  background: "linear-gradient(45deg, #d15c1d, #f2a72d)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  fontWeight: "bold",
-  transform: "scale(1.1)",
-},
-  title: {
+  star: (isMobile) => ({
+    fontSize: isMobile ? "16px" : "20px",
+    color: "#145032", // Lush Forest Green for inactive stars
+  }),
+  starActive: {
+    background: "linear-gradient(45deg, #FF7518, #E1B866)", // Orange to Yellow gradient
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    fontWeight: "bold",
+    transform: "scale(1.1)",
+  },
+  title: (isMobile) => ({
     fontFamily: fonts.secondary,
-    color: "#d15c1d",
-    fontSize: "20px",
-    marginBottom: "15px",
+    color: "#4B0082", // Purple for titles
+    fontSize: isMobile ? "20px" : "24px",
+    marginBottom: isMobile ? "15px" : "20px",
     textAlign: "center",
-  },
+    fontWeight: "600",
+  }),
   statsContainer: {
     display: "flex",
-    flexWrap: "wrap", // يسمح بالتقليص على الشاشات الصغيرة
-    gap: "15px",
+    flexWrap: "wrap",
+    gap: "20px",
     justifyContent: "center",
-    marginBottom: "25px",
+    marginBottom: "30px",
   },
-  statCard: {
-    width: "120px", // أصغر شوي عشان يناسب الجوال
-    height: "120px",
+  statCard: (isMobile) => ({
+    width: isMobile ? "100px" : "140px",
+    height: isMobile ? "100px" : "140px",
     borderRadius: "50%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    color: "#f1ebcc",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
-  statValue: {
-    fontSize: "18px",
+    color: "#FFFFFF", // White text for contrast
+    boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+    transition: "transform 0.3s ease",
+  }),
+  statValue: (isMobile) => ({
+    fontSize: isMobile ? "20px" : "24px",
     fontWeight: "bold",
-  },
-  statLabel: {
-    fontSize: "13px",
-    marginTop: "4px",
+  }),
+  statLabel: (isMobile) => ({
+    fontSize: isMobile ? "12px" : "14px",
+    marginTop: "6px",
     textAlign: "center",
-  },
-  chartsContainer: {
+  }),
+  chartsContainer: (isMobile) => ({
     display: "flex",
-    flexDirection: "column", // عمودي للشاشات الصغيرة
+    flexDirection: isMobile ? "column" : "row",
+    flexWrap: "wrap",
     gap: "20px",
-    marginBottom: "25px",
-  },
-  chartBox: {
-    width: "100%", // يشغل العرض كامل
-    background: "#fff",
-    borderRadius: "30px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-    padding: "10px",
-  },
-  chartTitle: {
-    fontSize: "15px",
-    marginBottom: "10px",
-    color: "#d15c1d",
+    marginBottom: "30px",
+    justifyContent: "space-between",
+  }),
+  chartBox: (isMobile) => ({
+    flex: 1,
+    minWidth: isMobile ? "100%" : "300px",
+    background: "#FFFFFF",
+    borderRadius: "20px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    padding: isMobile ? "10px" : "15px",
+    border: "1px solid rgba(20, 80, 50, 0.1)", // Light green border
+  }),
+  chartTitle: (isMobile) => ({
+    fontSize: isMobile ? "16px" : "18px",
+    marginBottom: "12px",
+    color: "#4B0082", // Purple for chart titles
     textAlign: "center",
-  },
-  reviewsContainer: {
-    marginTop: "15px",
+    fontWeight: "500",
+  }),
+  reviewsContainer: (isMobile) => ({
+    marginTop: "20px",
     display: "grid",
-    gridTemplateColumns: "1fr",
-    gap: "12px",
-  },
-  reviewCard: {
-    background: "#fff",
-    padding: "12px 15px",
-    borderRadius: "30px",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.08)",
-  },
-  reviewUser: {
+    gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fit, minmax(300px, 1fr))",
+    gap: "15px",
+  }),
+  reviewCard: (isMobile) => ({
+    background: "#FFFFFF",
+    padding: isMobile ? "10px 15px" : "15px 20px",
+    borderRadius: "20px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+    transition: "transform 0.3s ease",
+  }),
+  reviewUser: (isMobile) => ({
     margin: 0,
     fontWeight: "bold",
-    color: "#6b7f4f",
-    fontSize: "15px",
-  },
-  reviewContent: {
-    margin: "6px 0",
+    color: "#145032", // Green for user names
+    fontSize: isMobile ? "14px" : "16px",
+  }),
+  reviewContent: (isMobile) => ({
+    margin: "8px 0",
     fontSize: "14px",
-    lineHeight: "1.4",
-    color: "#493c33",
+    lineHeight: "1.5",
+    color: "#02251A", // Dark green for content
+  }),
+  headerIconContainer: {
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "25px",
   },
-  reviewRating: {
-    fontSize: "14px",
-    color: colors.highlight,
-    fontWeight: "bold",
-  },
-headerIconContainer: {
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "20px",
-},
-headerIcon: {
-  width: "80px", // حجم الأيقونة في الأعلى
-  height: "80px",
-},
-  noReviews: {
+  headerIcon: (isMobile) => ({
+    width: isMobile ? "70px" : "90px",
+    height: isMobile ? "70px" : "90px",
+  }),
+  noReviews: (isMobile) => ({
     textAlign: "center",
-    color: "#a0bebf",
-    fontSize: "14px",
-  },
+    color: "#145032",
+    fontSize: isMobile ? "14px" : "16px",
+    opacity: 0.7,
+  }),
   // ✅ أنماط جديدة لقسم المنتجات المرغوبة
   interestedProductsContainer: {
     display: "flex",
@@ -298,44 +333,45 @@ headerIcon: {
     padding: "10px 0",
     marginBottom: "20px",
     scrollbarWidth: "thin",
-    scrollbarColor: "#d15c1d #f1ebcc",
+    scrollbarColor: "#FF7518 rgba(2, 37, 26, 0.1)",
   },
-  interestedProductCard: {
-    background: "#fff",
-    borderRadius: "20px",
-    padding: "10px 15px",
+  interestedProductCard: (isMobile) => ({
+    background: "#FFFFFF",
+    borderRadius: "15px",
+    padding: isMobile ? "8px 12px" : "12px 18px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    minWidth: "150px",
-    boxShadow: "0 3px 8px rgba(0,0,0,0.08)",
+    minWidth: isMobile ? "140px" : "180px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
     cursor: "pointer",
     transition: "transform 0.3s ease",
-  },
-  interestedProductName: {
-    fontSize: "14px",
-    fontWeight: "bold",
-    color: "#493c33",
+  }),
+  interestedProductName: (isMobile) => ({
+    fontSize: isMobile ? "13px" : "15px",
+    fontWeight: "600",
+    color: "#02251A", // Dark green for names
     flex: 1,
-  },
-  interestedCountCircle: {
-    background: "#d15c1d",
-    color: "#f1ebcc",
+  }),
+  interestedCountCircle: (isMobile) => ({
+    background: "#FF7518", // Orange for count
+    color: "#FFFFFF",
     borderRadius: "50%",
-    width: "30px",
-    height: "30px",
+    width: isMobile ? "28px" : "35px",
+    height: isMobile ? "28px" : "35px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: "14px",
+    fontSize: isMobile ? "13px" : "15px",
     fontWeight: "bold",
-    marginLeft: "10px",
-    boxShadow: "0 2px 6px rgba(107, 127, 79, 0.5)", // ✅ لون الظل بدرجة #6b7f4f مع opacity 0.5
-  },
-  noInterested: {
+    marginLeft: "12px",
+    boxShadow: "0 3px 8px rgba(255, 117, 24, 0.3)", // Orange shadow
+  }),
+  noInterested: (isMobile) => ({
     textAlign: "center",
-    color: "#a0bebf",
-    fontSize: "14px",
+    color: "#145032",
+    fontSize: isMobile ? "14px" : "16px",
+    opacity: 0.7,
     width: "100%",
-  },
+  }),
 };

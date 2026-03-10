@@ -1,0 +1,63 @@
+.policy-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #02251A; /* أخضر غامق، مثل خلفية الصفحات الرئيسية */
+  padding: 24px 16px;
+  font-family: "Tajawal", sans-serif;
+  color: #E1B866; /* أصفر للنصوص الرئيسية */
+  text-align: right; /* محاذاة النصوص إلى اليمين للعربية */
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.policy-container h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FF7518; /* برتقالي للعناوين الرئيسية */
+  margin-bottom: 16px;
+}
+
+.policy-container h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #E1B866; /* أصفر للعناوين الفرعية */
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.policy-container p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #E1B866;
+  margin-bottom: 16px;
+}
+
+.policy-container ul {
+  list-style-type: disc;
+  padding-right: 20px;
+  margin-bottom: 16px;
+}
+
+.policy-container li {
+  font-size: 16px;
+  color: #E1B866;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .policy-container {
+    padding: 16px 8px;
+  }
+  .policy-container h1 {
+    font-size: 24px;
+  }
+  .policy-container h2 {
+    font-size: 20px;
+  }
+  .policy-container p, .policy-container li {
+    font-size: 14px;
+  }
+}

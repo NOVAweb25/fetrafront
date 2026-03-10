@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { logoutUser } from "../api/api";
-
 const ClientNavbar = () => {
   const [user, setUser] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -10,9 +9,8 @@ const ClientNavbar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
-  const accountIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1764962209/person_iwqjor.svg";
-  const logo= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968581/logo_revtav.svg";
-
+  const accountIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408843/person_zemcya.svg";
+  const logo = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770574166/logo_fetra_abjgay.gif";
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     if (savedUser) setUser(savedUser);
@@ -26,7 +24,6 @@ const ClientNavbar = () => {
     window.addEventListener("authChange", handleAuthChange);
     return () => window.removeEventListener("authChange", handleAuthChange);
   }, []);
-
   // ✅ إغلاق القائمة عند النقر خارجها
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -35,7 +32,6 @@ const ClientNavbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   // ✅ تسجيل الخروج (مُحدّثة)
   const handleLogout = async () => {
     try {
@@ -59,52 +55,48 @@ const ClientNavbar = () => {
     // ✅ توجيه المستخدم للصفحة الرئيسية (اختياري)
     navigate("/");
   };
-
   // ✅ التعامل مع الزائر
   const handleGuestClick = () => {
     setShowAuthModal(true);
     setShowMenu(false);
   };
-
   // ✅ الانتقال وإغلاق النافذة فور الضغط
   const handleAuthNavigation = (path) => {
     setShowAuthModal(false);
     navigate(path);
   };
-
   return (
     <>
       {/* ✅ شريط التنقل */}
       <nav style={styles.navbar}>
-        {/* 🟣 الشعار في المنتصف */}
-        <div style={styles.logoContainer}>
-          <div style={styles.logoCircle}>
-            <img src={logo} alt="Logo" style={styles.logo} />
-          </div>
-        </div>
-        {/* 👤 أيقونة المستخدم في اليمين */}
+        {/* 👤 أيقونة المستخدم في اليسار */}
         <div style={styles.userContainer} ref={menuRef}>
           <div
             style={styles.userButton}
             onClick={() => setShowMenu((prev) => !prev)}
           >
+            {user && (
+              <motion.span
+                style={styles.userName}
+                initial={{ x: 0, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                {user.firstName} {user.lastName}
+              </motion.span>
+            )}
             <div style={styles.iconCircle}>
               <img src={accountIcon} alt="Account" style={styles.icon} />
             </div>
-            {user && (
-              <span style={styles.userName}>
-                {user.firstName} {user.lastName}
-              </span>
-            )}
           </div>
           {/* 🔽 القائمة المنسدلة */}
           <AnimatePresence>
             {showMenu && (
               <motion.div
                 style={styles.dropdown}
-                initial={{ x: 150, opacity: 0 }}
+                initial={{ x: -150, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 150, opacity: 0 }}
+                exit={{ x: -150, opacity: 0 }}
                 transition={{ duration: 0.25 }}
               >
                 <button
@@ -138,6 +130,12 @@ const ClientNavbar = () => {
             )}
           </AnimatePresence>
         </div>
+        {/* 🟣 الشعار في اليمين */}
+        <div style={styles.logoContainer}>
+          <div style={styles.logoCircle}>
+            <img src={logo} alt="Logo" style={styles.logo} />
+          </div>
+        </div>
       </nav>
       {/* ✅ نافذة تأكيد تسجيل الخروج */}
       <AnimatePresence>
@@ -155,7 +153,7 @@ const ClientNavbar = () => {
               exit={{ scale: 0.8 }}
               transition={{ duration: 0.3 }}
             >
-              <h3 style={{ color: "#121921", marginBottom: "15px" }}>
+              <h3 style={{ color: "#E1B866", marginBottom: "15px" }}>
                 هل أنت متأكد من تسجيل الخروج؟
               </h3>
               <div style={styles.modalActions}>
@@ -192,7 +190,8 @@ const ClientNavbar = () => {
               transition={{ duration: 0.35 }}
             >
               <p style={styles.authMessage}>
-انضم الينا لتجربة شراء كاملة </p>
+                انضم الينا لتجربة شراء كاملة
+              </p>
               <div style={styles.authActions}>
                 <button
                   style={styles.joinButton}
@@ -220,7 +219,6 @@ const ClientNavbar = () => {
     </>
   );
 };
-
 export default ClientNavbar;
 const styles = {
   navbar: {
@@ -231,86 +229,79 @@ const styles = {
     height: "75px",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(255,255,255,0.08)",
+    justifyContent: "space-between",
+    background: "rgba(2, 37, 26, 0.08)", // ← Deep Jungle Green شفاف لعمق غابي
     backdropFilter: "blur(16px)",
-    borderBottom: "1px solid rgba(255,255,255,0.15)",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    borderBottom: "1px solid rgba(20, 80, 50, 0.15)", // حدود خضراء خفيفة
+    boxShadow: "0 4px 12px rgba(20, 80, 50, 0.15)", // ظل غابي
     zIndex: 1000,
+    padding: "0 20px", // ← قلل الـ padding اليميني لإعطاء مساحة أكبر
   },
-
   logoContainer: {
-    position: "absolute",
-    left: "50%",
-    transform: "translateX(-50%)",
+    display: "flex",
+    alignItems: "center",
   },
-
   logoCircle: {
     width: "70px",
     height: "70px",
-    background: "#f1ebcc",
+    background: "#E1B866", // ← Sunlit Yellow لبريق مشمس جذاب
     borderRadius: "50%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    //boxShadow: "0 0 25px #f2a72d",
-
+    //boxShadow: "0 0 25px #FF7518", // ظل برتقالي حيوي
   },
-
   logo: {
     width: "100%",
     height: "auto",
     borderRadius: "50%",
   },
-
   userContainer: {
-    position: "absolute",
-    right: "30px",
+    display: "flex",
+    alignItems: "center",
   },
-
   userButton: {
     display: "flex",
     alignItems: "center",
     gap: "8px",
     cursor: "pointer",
-    color: "#6b7f4f",
+    color: "#145032", // ← Lush Forest Green للنصوص الرئيسية
   },
-
   iconCircle: {
     width: "42px",
     height: "42px",
-    background: "rgba(255,255,255,0.15)",
+    background: "rgba(20, 80, 50, 0.15)", // ← Lush Forest Green شفاف
     borderRadius: "50%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    boxShadow: "0 0 10px rgba(255,255,255,0.2)",
+    boxShadow: "0 0 10px rgba(225, 184, 102, 0.2)", // ظل أصفر خفيف
   },
-
   icon: {
-    width: "60px",
-    height: "60px",
-      },
-
-  userName: {
-    color: "#6b7f4f",
-    fontSize: "1rem",
+    width: "55px",
+    height: "55px",
   },
-
+  userName: {
+    color: "#E1B866", // ← Sunlit Yellow لاسم المستخدم جذاب
+    fontSize: "1rem",
+    maxWidth: "calc(100vw - 160px)", // ← عرض ديناميكي بناءً على عرض الشاشة (logo + icon + padding)
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
   dropdown: {
     position: "absolute",
     top: "70px",
-    right: "0",
-    background: "#493c33",
+    left: "50px", // ← حركها شوي لليسار لتكون أكثر وضوحًا
+    background: "#02251A", // ← Deep Jungle Green غامق للقائمة
     borderRadius: "12px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+    boxShadow: "0 4px 10px rgba(20, 80, 50, 0.15)", // ظل غابي
     padding: "12px",
     display: "flex",
     flexDirection: "column",
     width: "180px",
     zIndex: 1200,
   },
-
   dropdownItem: {
     border: "none",
     background: "transparent",
@@ -318,162 +309,160 @@ const styles = {
     fontSize: "1rem",
     padding: "10px 8px",
     cursor: "pointer",
-    color: "#f1ebcc",
+    color: "#E1B866", // ← Sunlit Yellow للنصوص في القائمة
+    transition: "color 0.3s ease",
+    ':hover': { color: "#FF7518" }, // hover برتقالي حيوي
   },
-
   logoutButton: {
     marginTop: "10px",
     padding: "8px 15px",
     border: "none",
     borderRadius: "30px",
-    background: "linear-gradient(90deg, #a0bebf, #a0bebf)",
-    color: "#493c33",
+    background: "#FF7518", // ← Orange Mushroom لزر الخروج CTA
+    color: "#FFFFFF", // أبيض لتباين
     fontWeight: "600",
     cursor: "pointer",
+    transition: "background 0.3s ease",
+    ':hover': { background: "#A52A2A" }, // hover أحمر للإثارة
   },
-
-notificationBubble: {
-  position: "absolute",
-  top: "5px",
-  left: "12px",
-  display: "flex",
-  alignItems: "center",
-  gap: "4px",
-  backgroundColor: "#a0bebf",
-  borderRadius: "8px",
-  padding: "4px 8px",
-  boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-  maxWidth: "160px",
-},
-
-notificationIcon: {
-  backgroundColor: "#a0bebf",
-  color: "#121921",
-  borderRadius: "50%",
-  width: "16px",
-  height: "16px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: "bold",
-  fontSize: "11px",
-},
-
-notificationText: {
-  color: "#a0bebf",
-  fontSize: "0.75rem",
-  fontWeight: "600",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-},
-
+  notificationBubble: {
+    position: "absolute",
+    top: "5px",
+    left: "12px",
+    display: "flex",
+    alignItems: "center",
+    gap: "4px",
+    backgroundColor: "#4B0082", // ← Purple Jungle Bloom للإشعارات
+    borderRadius: "8px",
+    padding: "4px 8px",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    maxWidth: "160px",
+  },
+  notificationIcon: {
+    backgroundColor: "#4B0082",
+    color: "#FFFFFF",
+    borderRadius: "50%",
+    width: "16px",
+    height: "16px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    fontSize: "11px",
+  },
+  notificationText: {
+    color: "#E1B866", // ← Sunlit Yellow للنصوص
+    fontSize: "0.75rem",
+    fontWeight: "600",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
   modalOverlay: {
     position: "fixed",
     inset: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(2, 37, 26, 0.5)", // ← Deep Jungle Green شفاف للـ overlay
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 2000,
   },
-
   modalContent: {
-        color:"#493c33",
-    background: "#a0bebf",
+    color: "#E1B866", // ← Sunlit Yellow للنصوص في المودال
+    background: "#145032", // ← Lush Forest Green لخلفية المودال
     padding: "30px",
     borderRadius: "30px",
     textAlign: "center",
     width: "300px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+    boxShadow: "0 8px 20px rgba(2, 37, 26, 0.25)", // ظل غابي
   },
-
   modalActions: {
     marginTop: "15px",
     display: "flex",
     justifyContent: "space-between",
     gap: "12px",
   },
-
   confirmButton: {
-    backgroundColor: "#f1ebcc",
-    color: "#6b7f4f",
+    backgroundColor: "#FF7518", // ← Orange Mushroom لزر التأكيد CTA
+    color: "#FFFFFF",
     border: "none",
     borderRadius: "30px",
     cursor: "pointer",
     fontWeight: "bold",
     padding: "10px 20px",
+    transition: "background 0.3s ease",
+    ':hover': { background: "#A52A2A" }, // hover أحمر
   },
-
   cancelButton: {
-    backgroundColor: "#f1ebcc",
-    color: "#d15c1d",
+    backgroundColor: "#E1B866", // ← Sunlit Yellow لزر الإلغاء
+    color: "#02251A",
     border: "none",
     borderRadius: "30px",
     cursor: "pointer",
     padding: "10px 20px",
+    transition: "background 0.3s ease",
+    ':hover': { background: "#145032" }, // hover أخضر غامق
   },
-
   overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.4)",
+    background: "rgba(2, 37, 26, 0.4)", // ← Deep Jungle Green شفاف
     zIndex: 1500,
   },
-
   authSheet: {
     position: "fixed",
     bottom: 0,
     left: 0,
     width: "100%",
-    background: "#a0bebf",
+    background: "#145032", // ← Lush Forest Green لخلفية الشيت
     borderTopLeftRadius: "30px",
     borderTopRightRadius: "30px",
-    boxShadow: "0 -4px 15px rgba(0,0,0,0.15)",
+    boxShadow: "0 -4px 15px rgba(2, 37, 26, 0.15)", // ظل غابي
     padding: "25px",
     textAlign: "center",
     zIndex: 1600,
   },
-
   authMessage: {
-     color: "#493c33",
+    color: "#E1B866", // ← Sunlit Yellow للرسالة جذابة
     fontSize: "1.1rem",
     fontWeight: "600",
     marginBottom: "15px",
   },
-
   authActions: {
     display: "flex",
     justifyContent: "center",
     gap: "10px",
     marginBottom: "10px",
   },
-
   joinButton: {
-    background: "#f1ebcc",
+    background: "#FF7518", // ← Orange Mushroom لزر إنشاء حساب CTA
     border: "none",
-    color: "#d15c1d",
+    color: "#FFFFFF",
     fontWeight: "600",
     borderRadius: "30px",
     padding: "10px 18px",
     cursor: "pointer",
+    transition: "background 0.3s ease",
+    ':hover': { background: "#A52A2A" }, // hover أحمر
   },
-
   loginButton: {
-    background: "#f1ebcc",
+    background: "#E1B866", // ← Sunlit Yellow لزر تسجيل الدخول
     border: "none",
-    color: "#6b7f4f",
+    color: "#02251A",
     fontWeight: "600",
     borderRadius: "30px",
     padding: "10px 18px",
     cursor: "pointer",
+    transition: "background 0.3s ease",
+    ':hover': { background: "#145032" }, // hover أخضر غامق
   },
-
   closeAuth: {
     background: "transparent",
     border: "none",
-    color: "#493c33",
+    color: "#4B0082", // ← Purple Jungle Bloom لزر الإغلاق
     marginTop: "5px",
     cursor: "pointer",
+    transition: "color 0.3s ease",
+    ':hover': { color: "#A52A2A" }, // hover أحمر
   },
 };

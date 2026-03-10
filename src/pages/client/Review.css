@@ -1,118 +1,107 @@
 .review-page {
   min-height: 100vh;
   padding: 30px;
-  background: #f1ebcc;
+  background: #02251A; /* أخضر غامق للخلفية الرئيسية */
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
-
 /* 🟦 صندوق رأي */
 .review-card {
   width: 100%;
   max-width: 400px;
   padding: 25px;
-  background: rgba(160, 190, 191, 0.4); /* a0bebf */
+  background: rgba(20, 80, 50, 0.4); /* تدرج أخضر متوسط */
   backdrop-filter: blur(10px);
   border-radius: 30px;
   border: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
-
 /* 🔹 اسم المستخدم */
 .name-box {
   background: rgba(255,255,255,0.5);
   padding: 12px;
   border-radius: 12px;
   margin-bottom: 15px;
-  color: #6b7f4f;  /* لون اسم المستخدم */
+  color: #E1B866; /* أصفر فاتح للنص */
   font-size: 16px;
   font-weight: 600;
   text-align: right;
 }
-
 .name-box .placeholder {
-  color: #d15c1d;
+  color: #A52A2A; /* أحمر للتنبيه */
 }
-
 /* ✍️ مربع كتابة الرأي */
 .review-input {
   width: 100%;
   height: 120px;
   border-radius: 30px;
-  border: 1px solid #f2a72d;
+  border: 1px solid #E1B866; /* أصفر */
   padding: 8px;
   resize: none;
   margin-bottom: 15px;
   font-size: 15px;
-  color: #493c33; /* لون نص الرأي */
+  color: #E1B866;
   direction: rtl;
-  background: #fff;
+  background: #02251A; /* أخضر غامق */
 }
-
 /* ⭐ النجوم */
 .stars-container {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
 }
-
 .star {
   font-size: 30px;
   cursor: pointer;
   margin: 0 4px;
-  color: #a0bebf; /* خلفية النجم قبل التحديد */
+  color: #145032; /* أخضر متوسط قبل التحديد */
   transition: 0.2s;
 }
-
 .star.active {
-  background: linear-gradient(45deg, #d15c1d, #f2a72d);
+  background: linear-gradient(45deg, #FF7518, #E1B866); /* برتقالي إلى أصفر */
   background-clip: text;
   -webkit-text-fill-color: transparent;
   transform: scale(1.2);
 }
-
 /* زر إرسال */
 .submit-btn {
   width: 100%;
   padding: 14px;
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #A52A2A; /* أحمر للدعوة للعمل */
+  color: #E1B866;
   border: none;
   border-radius:30px;
   font-size: 16px;
   cursor: pointer;
   transition: 0.2s;
 }
-
 .submit-btn:hover {
   opacity: 0.9;
 }
-
 /* 🌟 نافذة تسجيل الدخول */
 .auth-bottom-sheet {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: #a0bebf;
+  background: #145032; /* أخضر متوسط */
   border-radius: 30px 25px 0 0;
   padding: 25px;
   box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
   z-index: 999;
   text-align: center;
 }
-
 .auth-message {
   font-size: 16px;
   margin-bottom: 15px;
+  color: #E1B866;
 }
-
 .auth-button {
   width: 100%;
   padding: 14px;
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #FF7518; /* برتقالي */
+  color: #02251A;
   border: none;
   border-radius: 30px;
   margin-bottom: 10px;
@@ -128,11 +117,62 @@
   justify-content: center;
   z-index: 999;
 }
-
 .auth-close {
   background: transparent;
-  color: #493c33;
+  color: #4B0082; /* بنفسجي */
   border: none;
   font-size: 16px;
   margin-top: 5px;
+}
+/* Media Queries للتناسب مع الجوال */
+@media (max-width: 599px) {
+  .review-page {
+    padding: 20px;
+  }
+  .review-card {
+    padding: 20px;
+    max-width: 100%;
+  }
+  .review-input {
+    height: 100px;
+    font-size: 14px;
+  }
+  .star {
+    font-size: 28px;
+    margin: 0 3px;
+  }
+  .submit-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+  .auth-bottom-sheet {
+    padding: 20px;
+  }
+  .auth-message {
+    font-size: 15px;
+  }
+  .auth-button {
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+@media (min-width: 600px) {
+  .review-card {
+    max-width: 450px;
+  }
+}
+@media (min-width: 768px) {
+  .review-page {
+    padding: 40px;
+  }
+  .review-card {
+    padding: 30px;
+    max-width: 500px;
+  }
+  .review-input {
+    height: 140px;
+  }
+  .star {
+    font-size: 35px;
+  }
 }

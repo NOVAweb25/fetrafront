@@ -11,14 +11,14 @@
   flex: 1;
   display: flex;
   align-items: center;
-  background: #fff;
+  background: #02251A;
   border-radius: 30px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(255, 117, 24, 0.3); /* ظل برتقالي أوضح */
   padding: 10px 15px;
   transition: all 0.3s ease;
 }
 .search-box:focus-within {
-  box-shadow: 0 0 0 3px rgba(86, 142, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(165, 42, 42, 0.2);
 }
 .search-box img {
   width: 20px;
@@ -31,19 +31,19 @@
   background: transparent;
   font-size: 15px;
   padding: 0 10px;
-  color: #493c33;
+  color: #E1B866;
   direction: rtl;
 }
 /* 🎯 اختيار الحالة */
 .filter-box {
   position: relative;
-  background: #fff;
+  background: #02251A;
   border-radius: 30px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(255, 117, 24, 0.3); /* ظل برتقالي أوضح */
   padding: 10px 14px;
   cursor: pointer;
   font-size: 15px;
-  color: #493c33;
+  color: #E1B866;
   font-weight: 600;
   width: 100%;
   text-align: right;
@@ -53,7 +53,7 @@
   position: absolute;
   top: 110%;
   right: 0;
-  background: #a0bebf;
+  background: #145032;
   border-radius: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   overflow: hidden;
@@ -64,24 +64,24 @@
 .filter-option {
   padding: 10px 15px;
   font-size: 14px;
-  color: #493c33;
-  border-bottom: 1px solid #6b7f4f;
+  color: #E1B866;
+  border-bottom: 1px solid #A52A2A;
   transition: background 0.2s;
 }
 .filter-option:last-child {
   border-bottom: none;
 }
 .filter-option:hover {
-  background: #f1ebcc;
+  background: #02251A;
 }
 .filter-option.active {
-  background: #f1ebcc;
-  color: #d15c1d;
+  background: #02251A;
+  color: #FF7518;
   font-weight: bold;
 }
 .myorders-page {
   font-family: "Tajawal", sans-serif;
-  background: #f1ebcc;
+  background: #02251A;
   min-height: 100vh;
   padding: 80px 15px 100px;
 }
@@ -92,7 +92,7 @@
 }
 /* 🧾 بطاقات الطلبات */
 .order-card {
-  background: #a0bebf;
+  background: #145032;
   border-radius: 30px;
   padding: 15px 18px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
@@ -102,7 +102,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 95%;
   margin-bottom: 14px;
-transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .order-card:active {
   transform: scale(0.98);
@@ -110,11 +110,11 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .order-number {
   font-weight: bold;
-  color: #493c33;
+  color: #E1B866;
 }
 .status-badge {
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #A52A2A;
+  color: #E1B866;
   border-radius:30px;
   padding: 5px 12px;
   font-size: 13px;
@@ -123,7 +123,7 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 .invoice-circle {
   width: 44px;
   height: 44px;
-  background: #FFF;
+  background: #02251A;
   border-radius: 50%;
   border: none;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
@@ -151,7 +151,7 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #a0bebf;
+  background: #145032;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
@@ -173,13 +173,13 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #6b7f4f;
+  border-bottom: 1px solid #A52A2A;
   padding-bottom: 8px;
   margin-bottom: 12px;
 }
 .invoice-header h3 {
   font-size: 17px;
-  color: #493c33;
+  color: #E1B866;
 }
 .close-icon-btn {
   width: 30px;
@@ -191,7 +191,7 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: transparent;
   border: none;
   font-size: 16px;
-  color: #493c33;
+  color: #E1B866;
   cursor: pointer;
   padding: 6px;
   display: flex;
@@ -208,16 +208,17 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   gap: 10px;
 }
 .client-section {
-  background: #f9f9f9;
+  background: #02251A;
   border-radius: 30px;
   padding: 12px;
   margin-bottom: 12px;
   font-size: 14px;
   line-height: 1.6;
+  color: #E1B866;
 }
 .client-section h4 {
   margin-bottom: 8px;
-  color: #d15c1d;
+  color: #FF7518;
 }
 .client-map {
   width: 100%;
@@ -228,13 +229,13 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .invoice-items-section h4 {
   margin-bottom: 8px;
-  color: #6b7f4f;
+  color: #A52A2A;
 }
 .invoice-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid #6b7f4f;
+  border-bottom: 1px solid #A52A2A;
   padding-bottom: 8px;
 }
 .invoice-item img {
@@ -246,21 +247,22 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 .invoice-summary {
   margin-top: 15px;
   font-size: 14px;
+  color: #E1B866;
 }
 .invoice-summary h4 {
-  color: #493c33;
+  color: #FF7518;
   font-size: 16px;
   margin-top: 10px;
 }
 .total {
-  color: #493c33;
+  color: #FF7518;
 }
 .share-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #d15c1d, #f2a72d);
-  color: #f1ebcc;
+  background: linear-gradient(135deg, #FF7518, #E1B866);
+  color: #02251A;
   border: none;
   border-radius: 10px;
   padding: 6px 12px;
@@ -270,25 +272,26 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   transition: 0.3s ease;
 }
 .share-btn:hover {
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #A52A2A;
+  color: #E1B866;
   transform: scale(1.03);
 }
 .receipt-box {
   margin-top: 15px;
   padding: 12px;
-  background: #6b7f4f;
+  background: #02251A;
   border-radius: 30px;
+  color: #E1B866;
 }
 .receipt-file {
-  background: #d15c1d;
-  border: 1px solid #f2a72d;
+  background: #A52A2A;
+  border: 1px solid #E1B866;
   border-radius: 30px;
   padding: 10px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;
-  color: #f1ebcc;
+  color: #E1B866;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
   margin-top: 6px;
@@ -297,18 +300,18 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   white-space: nowrap;
 }
 .receipt-file:hover {
-  background: #a0bebf;
-  border-color: #493c33;
-  box-shadow: 0 2px 10px rgba(86, 142, 255, 0.2);
+  background: #145032;
+  border-color: #FF7518;
+  box-shadow: 0 2px 10px rgba(165, 42, 42, 0.2);
 }
 .item-price {
-  color: #493c33;
+  color: #E1B866;
   font-weight: bold;
   margin: 2px 0;
 }
 .item-qty {
   font-size: 13px;
-  color: #493c33;
+  color: #E1B866;
 }
 /* ✅ تنبيه إضافة المنتج للسلة - من الأعلى */
 .cart-alert {
@@ -316,8 +319,8 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #d15c1d, #f2a72d);
-  color: #f1ebcc;
+  background: linear-gradient(135deg, #FF7518, #E1B866);
+  color: #02251A;
   padding: 14px 26px;
   border-radius: 40px;
   font-size: 16px;
@@ -353,9 +356,9 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
   line-height: 1;
 }
 .action-btn.heart.active .heart-symbol {
-  color: #d15c1d;
-  text-shadow: 0 0 10px rgba(255, 59, 106, 0.7),
-               0 0 20px rgba(255, 59, 106, 0.5);
+  color: #A52A2A;
+  text-shadow: 0 0 10px rgba(165, 42, 42, 0.7),
+               0 0 20px rgba(165, 42, 42, 0.5);
   transform: scale(1.1);
 }
 .product-actions {
@@ -379,14 +382,14 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .action-btn.heart .heart-symbol {
   font-size: 22px;
-  color: #d15c1d;
+  color: #A52A2A;
   transition: transform 0.2s ease;
 }
 .action-btn {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #fff;
+  background: #02251A;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
@@ -396,7 +399,7 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 @keyframes slideDown {
   from {
-    transform: translate(-50%, -40px); /* ✅ فقط ينزل من فوق */
+    transform: translate(-50%, -40px);
     opacity: 0;
   }
   to {
@@ -414,20 +417,20 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 @media (max-width: 480px) {
  .alert-toast {
     position: fixed;
-    top: 20px; /* ✅ من الأعلى */
-    left: 50%; /* ✅ منتصف العرض */
-    transform: translate(-50%, 0); /* ✅ توسيط أفقي فقط */
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, 0);
     z-index: 9999;
-    background: #fff;
+    background: #02251A;
     border-radius: 12px;
-    padding: 10px 14px; /* ✅ مسافة طبيعية حول النص */
+    padding: 10px 14px;
     font-size: 14px;
     font-weight: 500;
-    color: #333;
-    width: fit-content; /* ✅ يأخذ مساحة النص فقط */
-    max-width: 80%; /* لا يتجاوز العرض */
+    color: #E1B866;
+    width: fit-content;
+    max-width: 80%;
     text-align: center;
-    line-height: 1.4; /* ✅ ضبط الارتفاع داخل المستطيل */
+    line-height: 1.4;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     animation: slideDown 0.4s ease, fadeOut 0.4s ease 1.8s forwards;
     opacity: 1;
@@ -458,9 +461,52 @@ transition: transform 0.3s ease, box-shadow 0.3s ease;
 /* 🔄 شريط التحميل المتحرك */
 .loading-bar {
   height: 4px;
-  background: linear-gradient(to right, #f2a72d, #d15c1d);
+  background: linear-gradient(to right, #E1B866, #FF7518);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+}
+.no-orders-text {
+  text-align: center;
+  color: #E1B866; /* أصفر واضح */
+  font-size: 16px;
+}
+@media (min-width: 600px) {
+  .search-wrapper {
+    gap: 15px;
+  }
+  .search-box {
+    padding: 12px 18px;
+  }
+  .filter-box {
+    padding: 12px 16px;
+  }
+  .order-card {
+    padding: 18px 20px;
+  }
+}
+@media (min-width: 768px) {
+  .myorders-page {
+    padding: 100px 20px 120px;
+  }
+  .orders-container {
+    width: 90%;
+    max-width: 800px;
+  }
+  .invoice-sheet {
+    padding: 25px;
+    max-width: 600px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+  }
+  .client-map {
+    height: 220px;
+  }
+}
+@media (min-width: 1024px) {
+  .orders-container {
+    max-width: 900px;
+  }
 }

@@ -5,9 +5,7 @@ import { Share2 } from "lucide-react";
 import BottomNav from "../../components/BottomNav";
 import { getUserById, getProductById } from "../../api/api";
 import "./MyOrders.css";
-
-const API_BASE = process.env.REACT_APP_API_BASE; // ✅ من env
-
+const API_BASE = process.env.REACT_APP_API_BASE;
 const MyOrders = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [orders, setOrders] = useState([]);
@@ -20,10 +18,8 @@ const MyOrders = () => {
   const [userFavorites, setUserFavorites] = useState([]);
   const [userCart, setUserCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const invoiceIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968572/invoice_kkbd8p.svg";
-  const closeIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/close_mcygjs.svg";
-
+  const closeIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770409276/close_ocjfbw.svg";
   const statuses = [
     "بانتظار تأكيد الطلب",
     "تم تأكيد الطلب",
@@ -32,17 +28,13 @@ const MyOrders = () => {
     "جاهز للاستلام",
     "تم رفض الطلب",
   ];
-
-  // ✅ دالة تساعدنا في تحديد الرابط الصحيح (Cloudinary أو السيرفر)
   const getImageUrl = (path) => {
     if (!path) return "";
-    if (path.startsWith("http")) return path; // Cloudinary
-    return `${API_BASE}${path}`; // سيرفر
+    if (path.startsWith("http")) return path;
+    return `${API_BASE}${path}`;
   };
-
   const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
   const cartIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968566/cart_jsj3mh.svg";
-
   const loadOrders = async () => {
     setIsLoading(true);
     try {
@@ -57,7 +49,6 @@ const MyOrders = () => {
       if (statusFilter) {
         filtered = filtered.filter((o) => o.status === statusFilter);
       }
-      // ✅ معالجة روابط الإيصالات
       filtered = filtered.map((order) => ({
         ...order,
         paymentProof: getImageUrl(order.paymentProof),
@@ -69,7 +60,6 @@ const MyOrders = () => {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     if (!user?._id) return;
     const fetchUserData = async () => {
@@ -88,18 +78,15 @@ const MyOrders = () => {
     };
     fetchUserData();
   }, [user]);
-
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (user?._id) loadOrders();
     }, 300);
     return () => clearTimeout(delayDebounce);
   }, [user, statusFilter, search]);
-
   const handleAddToCart = async (product) => {
     if (!user?._id) return;
     try {
-      // جلب المنتج الطازج من API للتحقق من وجوده ومخزونه
       const productRes = await getProductById(product._id);
       const freshProduct = productRes.data;
       if (!freshProduct || freshProduct.stock === 0) {
@@ -128,7 +115,6 @@ const MyOrders = () => {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2500);
       window.dispatchEvent(new Event("cartUpdated"));
-      // تحديث السلة المحلية
       const updatedCart = [...userCart];
       if (currentItem) {
         currentItem.quantity += 1;
@@ -149,7 +135,6 @@ const MyOrders = () => {
       setTimeout(() => setShowAlert(false), 2500);
     }
   };
-
   const handleFavorite = async (product) => {
     if (!user?._id) return;
     try {
@@ -167,7 +152,6 @@ const MyOrders = () => {
       console.error("❌ خطأ أثناء تحديث المفضلة:", err);
     }
   };
-
   const handleShareLocation = (coords) => {
     if (!coords || coords.length !== 2) return;
     const lat = coords[1];
@@ -183,13 +167,11 @@ const MyOrders = () => {
       window.open(url, "_blank");
     }
   };
-
   const openReceipt = (proofUrl) => {
     if (!proofUrl) return;
     const url = getImageUrl(proofUrl);
     window.open(url, "_blank");
   };
-
   return (
     <>
       <div className="myorders-page">
@@ -270,7 +252,7 @@ const MyOrders = () => {
                   </motion.div>
                 ))
               ) : (
-                <p className="text-center text-gray-400">لا توجد طلبات حالياً</p>
+                <p className="no-orders-text">لا توجد طلبات حالياً</p>
               )}
             </AnimatePresence>
           )}
@@ -434,5 +416,4 @@ const MyOrders = () => {
     </>
   );
 };
-
 export default MyOrders;

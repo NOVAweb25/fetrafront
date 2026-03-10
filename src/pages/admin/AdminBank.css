@@ -4,17 +4,28 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f1ebcc;
+  background: rgba(2, 37, 26, 0.05); /* Light Deep Jungle for subtle background */
 }
 
 .bank-card {
-  background: #f1ebcc;
+  background: rgba(20, 80, 50, 0.9); /* Lush Forest semi-transparent */
   border-radius: 30px;
   padding: 25px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 15px rgba(2, 37, 26, 0.4);
   text-align: center;
   width: 360px;
   position: relative;
+  border: 2px solid #4B0082; /* Purple border */
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 3px 15px rgba(2, 37, 26, 0.4);
+  }
+  to {
+    box-shadow: 0 3px 15px rgba(75, 0, 130, 0.3); /* Purple tint */
+  }
 }
 
 .barcode-wrapper {
@@ -28,27 +39,29 @@
   width: 120px;
   height: 120px;
   border-radius: 30px;
-  border: 3px solid #d15c1d;
+  border: 3px solid #FF7518; /* Orange border */
   overflow: hidden;
   position: relative;
   transition: 0.3s;
+  background: #02251A; /* Deep Jungle fallback */
 }
 
 .barcode-circle:hover {
-  border-color: #f2a72d;
+  border-color: #E1B866; /* Yellow hover */
+  transform: scale(1.05);
 }
 
 .barcode-circle img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #6b7f4f;
+  background: #02251A;
 }
 
 .pic-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(2, 37, 26, 0.4); /* Deep Jungle overlay */
   opacity: 0;
   display: flex;
   align-items: center;
@@ -70,9 +83,10 @@
 }
 
 .bank-info .title {
-  font-size: 20px;
-  color: #d15c1d;
-  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #4B0082; /* Purple */
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,33 +98,116 @@
   width: 18px;
   height: 18px;
   padding: 6px;
-  background: #f0f0f0;
+  background: #02251A; /* Deep Jungle */
   border-radius: 50%;
   cursor: pointer;
   transition: 0.2s;
   opacity: 0.7;
+  filter: invert(1);
 }
 
 .edit-icon:hover {
-  background: #a0bebf;
+  background: #145032; /* Lush Forest */
   opacity: 1;
+  transform: rotate(15deg);
   /* 🚫 حذف invert */
   filter: none;
 }
 
 .bank-row {
   font-size: 16px;
-  color: #493c33;
+  color: #E1B866; /* Yellow */
   margin: 6px 0;
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
+  border-radius: 30px;
+  padding: 8px 12px;
+  box-shadow: 0 1px 4px rgba(2, 37, 26, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bank-row strong {
+  color: #4B0082; /* Purple */
+  font-weight: 600;
+  margin-left: 4px;
 }
 
 .edit-fields input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #f2a72d;
+  border: 1px solid #4B0082; /* Purple border */
   border-radius: 30px;
   margin-bottom: 10px;
   font-size: 15px;
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
+  color: #E1B866;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.edit-fields input::placeholder {
+  color: #E1B866;
+}
+
+.edit-fields input:focus {
+  border-color: #FF7518; /* Orange focus */
+  box-shadow: 0 0 8px rgba(255, 117, 24, 0.4);
+}
+
+/* 🏦 تصميم حديث لقائمة اختيار البنك */
+.edit-fields select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #4B0082; /* Purple border */
+  border-radius: 30px;
+  font-size: 15px;
+  color: #E1B866;
+  background: rgba(2, 37, 26, 0.2)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23E1B866'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E")
+    no-repeat right 12px center;
+  background-size: 16px;
+  appearance: none;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.edit-fields select:hover {
+  border-color: #FF7518; /* Orange hover */
+  background-color: rgba(2, 37, 26, 0.3);
+}
+
+.edit-fields select:focus {
+  outline: none;
+  border-color: #FF7518;
+  box-shadow: 0 0 0 3px rgba(255, 117, 24, 0.2);
+}
+
+/* 📋 عناصر القائمة */
+.edit-fields select option {
+  padding: 10px;
+  font-size: 15px;
+  background: #02251A; /* Deep Jungle */
+  color: #E1B866; /* Yellow */
+  border-radius: 30px;
+}
+
+/* 🌈 تحسين شكل النص في عرض البيانات */
+
+/* 🏦 تحسين مظهر العنوان */
+.bank-info .title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #4B0082; /* Purple */
+  margin-bottom: 20px;
+}
+
+/* 🌟 تأثير عند تمرير الماوس على حقل الإدخال */
+.edit-fields input:hover,
+.edit-fields input:focus {
+  border-color: #FF7518;
+  box-shadow: 0 0 0 2px rgba(255, 117, 24, 0.2);
+  background-color: rgba(2, 37, 26, 0.3);
 }
 
 .buttons-row {
@@ -127,83 +224,53 @@
   font-size: 15px;
   cursor: pointer;
   transition: 0.2s;
+  color: #FFFFFF;
 }
 
 button.cancel {
-  background: #a0bebf;
-color: #493c33;
+  background: #A52A2A; /* Red Fungus */
+}
+
+button.cancel:hover {
+  background: #FF7518; /* Orange hover */
+  transform: scale(1.05);
 }
 
 button.save {
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #FF7518; /* Orange Mushroom */
 }
 
-/* 🏦 تصميم حديث لقائمة اختيار البنك */
-.edit-fields select {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #f2a72d;
-  border-radius: 30px;
-  font-size: 15px;
-  color: #493c33;
-  background: #a0bebf url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E") no-repeat right 12px center;
-  background-size: 16px;
-  appearance: none;
-  cursor: pointer;
-  transition: 0.25s;
+button.save:hover {
+  background: #E1B866; /* Yellow hover */
+  transform: scale(1.05);
 }
 
-.edit-fields select:hover {
-  border-color: #f2a72d;
-  background-color: #fff;
-}
+/* 📱 للجوال الصغير */
+@media (max-width: 480px) {
+  .bank-card {
+    width: 90%;
+    padding: 20px;
+  }
 
-.edit-fields select:focus {
-  outline: none;
-  border-color: #f2a72d;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-}
+  .barcode-circle {
+    width: 100px;
+    height: 100px;
+  }
 
-/* 📋 عناصر القائمة */
-.edit-fields select option {
-  padding: 10px;
-  font-size: 15px;
-  background: #a0bebf;
-  color: #493c33;
-   border-radius: 30px;
-}
+  .bank-info .title {
+    font-size: 20px;
+  }
 
-/* 🌈 تحسين شكل النص في عرض البيانات */
-.bank-row strong {
-  color: #6b7f4f;
-  font-weight: 600;
-  margin-left: 4px;
-}
+  .bank-row {
+    font-size: 14px;
+  }
 
-.bank-row {
-  background: #f9fafc;
-  border-radius: 30px;
-  padding: 8px 12px;
-  margin: 6px 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .edit-fields input,
+  .edit-fields select {
+    font-size: 14px;
+  }
 
-/* 🏦 تحسين مظهر العنوان */
-.bank-info .title {
-  font-size: 22px;
-  font-weight: 600;
-  color: #d15c1d;
-  margin-bottom: 20px;
-}
-
-/* 🌟 تأثير عند تمرير الماوس على حقل الإدخال */
-.edit-fields input:hover,
-.edit-fields input:focus {
-  border-color: #f2a72d;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-  background-color: #fff;
+  .buttons-row button {
+    font-size: 14px;
+  }
 }

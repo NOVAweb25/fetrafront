@@ -7,6 +7,7 @@ import {
   updateBankDetail,
 } from "../../api/api";
 import "./AdminBank.css";
+
 const API_BASE = process.env.REACT_APP_API_BASE;
 
 const bankOptions = [
@@ -20,6 +21,7 @@ const bankOptions = [
   "الإنماء",
   "غير محدد",
 ];
+
 const AdminBank = () => {
   const [bank, setBank] = useState(null);
   const [formData, setFormData] = useState({
@@ -29,13 +31,21 @@ const AdminBank = () => {
     bankName: "",
     barcode: "",
   });
-  const [originalData, setOriginalData] = useState(null);
+  const [originalData, setOriginalData] = useState({
+    ownerName: "",
+    iban: "",
+    accountNumber: "",
+    bankName: "",
+    barcode: "",
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [barcodePreview, setBarcodePreview] = useState(null);
   const [isBarcodeChanged, setIsBarcodeChanged] = useState(false);
   const barcodeInputRef = useRef(null);
-const ImageIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968571/image_anmq2j.svg";
-const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/edit_xmyhv0.svg";
+  const ImageIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406971/image_ckumcg.svg";
+  const EditIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411103/edit_qr0z2r.svg";
   useEffect(() => {
     loadBank();
   }, []);
@@ -57,7 +67,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
         setOriginalData(cleanData);
         setIsBarcodeChanged(false);
         if (b.barcode) setBarcodePreview(b.barcode);
-
       }
     } catch (err) {
       console.error("Error loading bank details:", err);
@@ -96,7 +105,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
   const handleCancel = () => {
     setFormData(originalData);
     setBarcodePreview(originalData?.barcode || null);
-
     setIsBarcodeChanged(false);
     setIsEditing(false);
   };

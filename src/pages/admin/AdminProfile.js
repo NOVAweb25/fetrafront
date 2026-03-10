@@ -10,21 +10,21 @@ const AdminProfile = () => {
   const [formData, setFormData] = useState({});
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
-   const [saving, setSaving] = useState(false);
- const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
-const ImageIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968571/image_anmq2j.svg";
-const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/edit_xmyhv0.svg";
-
+  const [saving, setSaving] = useState(false);
+  const SearchIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407020/search_wvv596.svg";
+  const ImageIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406971/image_ckumcg.svg";
+  const EditIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411103/edit_qr0z2r.svg";
   // 🟢 تحميل بيانات المستخدم
   useEffect(() => {
     loadUserData();
   }, []);
-
   const loadUserData = async () => {
     try {
       const res = await getCurrentUser();
       const data = res.data;
-
       if (!data.displayOptions) {
         data.displayOptions = {
           showPic: true,
@@ -33,7 +33,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
           showNickname: true,
         };
       }
-
       setUser(data);
       setFormData(data);
       setPreviewUrl(data.profilePic || null);
@@ -41,44 +40,34 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       console.error("❌ Error loading user data:", err);
     }
   };
-
   // 🟠 تغيير الصورة (قبل الحفظ)
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     setFormData({ ...formData, profilePic: file });
     setPreviewUrl(URL.createObjectURL(file));
   };
-
   // 🟣 حفظ البيانات
   const handleSave = async () => {
-  try {
-    setSaving(true); // 🔵 بدء التحميل
-
-    const data = new FormData();
-
-    if (formData.profilePic instanceof File) {
-      data.append("profilePic", formData.profilePic);
+    try {
+      setSaving(true); // 🔵 بدء التحميل
+      const data = new FormData();
+      if (formData.profilePic instanceof File) {
+        data.append("profilePic", formData.profilePic);
+      }
+      ["firstName", "lastName", "nickname"].forEach((f) => {
+        if (formData[f]) data.append(f, formData[f]);
+      });
+      data.append("displayOptions", JSON.stringify(formData.displayOptions));
+      await updateUser(user._id, data);
+      await loadUserData();
+      setEditing(false);
+    } catch (err) {
+      console.error("❌ Error saving data:", err);
+    } finally {
+      setSaving(false); // 🔵 انتهاء التحميل
     }
-
-    ["firstName", "lastName", "nickname"].forEach((f) => {
-      if (formData[f]) data.append(f, formData[f]);
-    });
-
-    data.append("displayOptions", JSON.stringify(formData.displayOptions));
-
-    await updateUser(user._id, data);
-    await loadUserData();
-    setEditing(false);
-  } catch (err) {
-    console.error("❌ Error saving data:", err);
-  } finally {
-    setSaving(false); // 🔵 انتهاء التحميل
-  }
-};
-
-
+  };
   // 🔁 التبديل في خيارات العرض
   const toggleDisplay = (field) => {
     setFormData({
@@ -89,9 +78,7 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       },
     });
   };
-
   if (!user) return null;
-
   // ✅ عرض الصورة من Cloudinary أو محلية مؤقتة
   const profileImage =
     formData.profilePic instanceof File
@@ -101,11 +88,9 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
         ? user.profilePic
         : `${window.location.origin}${user.profilePic}`
       : ImageIcon;
-
   return (
     <div className="admin-layout">
       <AdminSidebar />
-
       <div className="admin-profile-center">
         <motion.div
           className="profile-card"
@@ -135,11 +120,9 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
               onChange={handleImageChange}
             />
           </div>
-
           {/* 🧾 بيانات المستخدم */}
           <div className="user-info">
             <h2 className="username">{user.username}</h2>
-
             {!editing ? (
               <>
                 <div className="name-row">
@@ -153,7 +136,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                     onClick={() => setEditing(true)}
                   />
                 </div>
-
                 <div className="toggles">
                   <label>
                     <input
@@ -172,7 +154,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                     عرض الاسم الأخير
                   </label>
                 </div>
-
                 <div className="nickname-row">
                   <span
                     className={`nickname ${
@@ -188,7 +169,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                     onClick={() => setEditing(true)}
                   />
                 </div>
-
                 <label className="toggle-nickname">
                   <input
                     type="checkbox"
@@ -224,15 +204,17 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                     setFormData({ ...formData, nickname: e.target.value })
                   }
                 />
-
                 <div className="buttons-row">
                   <button className="cancel" onClick={() => setEditing(false)}>
                     إلغاء
                   </button>
-                  <button className="save" onClick={handleSave} disabled={saving}>
-  {saving ? "جاري الحفظ..." : "حفظ"}
-</button>
-
+                  <button
+                    className="save"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving ? "جاري الحفظ..." : "حفظ"}
+                  </button>
                 </div>
               </div>
             )}
@@ -242,5 +224,4 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
     </div>
   );
 };
-
 export default AdminProfile;

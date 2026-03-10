@@ -23,9 +23,14 @@ import Review from "./pages/client/Review";
 import PaymentSuccess from "./pages/client/PaymentSuccess";
 import PaymentFailed from "./pages/client/PaymentFailed";
 import BackgroundMusic from "./components/BackgroundMusic";
+import PrivacyPolicy from "./components/PrivacyPolicy"; // استيراد صفحة سياسة الخصوصية
+import Terms from "./components/Terms"; // استيراد صفحة الشروط والأحكام
+import PaymentPolicy from "./components/PaymentPolicy"; // استيراد صفحة سياسة الدفع
+import ReturnPolicy from "./components/ReturnPolicy"; // استيراد صفحة سياسة الاسترجاع والاستبدال
+import OrderPolicy from "./components/OrderPolicy"; // استيراد صفحة سياسة الطلب
 
 // ✅ مكوّن لصفحات العميل مع الـ Navbar و Footer
-const ClientLayout = ({ children }) => (
+const ClientLayout = ({ children, showBottomNav = false }) => (
   <>
     <ClientNavbar />
     {/* 🎶 موسيقى الخلفية */}
@@ -33,6 +38,7 @@ const ClientLayout = ({ children }) => (
     <div style={{ paddingTop: "75px" }}>
       {children}
     </div>
+    {showBottomNav && <BottomNav />}
     <Footer />
   </>
 );
@@ -83,6 +89,7 @@ function App() {
 
   // ✅ الحماية التلقائية لصفحات المدير
   const isAdmin = token && user?.role === "admin";
+
   return (
     <Routes>
       {/* 🏠 الصفحة الرئيسية */}
@@ -92,13 +99,12 @@ function App() {
           isAdmin ? (
             <Navigate to="/admin/stats" replace />
           ) : (
-            <ClientLayout>
+            <ClientLayout showBottomNav={true}>
               <Home />
               <div id="sections">
                 <Sections />
               </div>
               <Review />
-              <BottomNav />
             </ClientLayout>
           )
         }
@@ -117,6 +123,47 @@ function App() {
         element={
           <ClientLayout>
             <Register />
+          </ClientLayout>
+        }
+      />
+      {/* صفحات السياسات (مرتبطة بالفوتر) */}
+      <Route
+        path="/privacy-policy"
+        element={
+          <ClientLayout showBottomNav={true}>
+            <PrivacyPolicy />
+          </ClientLayout>
+        }
+      />
+      <Route
+        path="/terms"
+        element={
+          <ClientLayout showBottomNav={true}>
+            <Terms />
+          </ClientLayout>
+        }
+      />
+      <Route
+        path="/payment-policy"
+        element={
+          <ClientLayout showBottomNav={true}>
+            <PaymentPolicy />
+          </ClientLayout>
+        }
+      />
+      <Route
+        path="/return-policy"
+        element={
+          <ClientLayout showBottomNav={true}>
+            <ReturnPolicy />
+          </ClientLayout>
+        }
+      />
+      <Route
+        path="/order-policy"
+        element={
+          <ClientLayout showBottomNav={true}>
+            <OrderPolicy />
           </ClientLayout>
         }
       />
@@ -214,18 +261,16 @@ function App() {
       <Route
         path="/product/:id"
         element={
-          <ClientLayout>
+          <ClientLayout showBottomNav={true}>
             <ProductDetails />
-            <BottomNav />
           </ClientLayout>
         }
       />
       <Route
         path="/sections"
         element={
-          <ClientLayout>
+          <ClientLayout showBottomNav={true}>
             <Sections />
-            <BottomNav />
           </ClientLayout>
         }
       />

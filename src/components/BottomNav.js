@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, animate, useTransform, useDragControls } from "framer-motion";
 import {
   getCurrentUser,
@@ -11,9 +11,9 @@ import cartAddIcon from "../assets/cart.svg";
 import { useNavigate } from "react-router-dom";
 import { PanelTopClose, PanelRightClose } from "lucide-react";
 import "./BottomNav.css";
-const plusIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968591/plus_xwrg7i.svg";
-const minusIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968578/minus_rpgpcr.svg";
-const trashIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968568/delete_kf2kz4.svg";
+const plusIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407003/plus_gazgpc.svg";
+const minusIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406988/minus_hu6beu.svg";
+const trashIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411122/delete_wfmwpp.svg";
 const BottomNav = () => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
@@ -22,19 +22,20 @@ const BottomNav = () => {
   const [total, setTotal] = useState(0);
   const [alertMessage, setAlertMessage] = useState("");
   const [loading, setLoading] = useState(true);
+   
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const navigate = useNavigate();
-   const [layoutMode, setLayoutMode] = useState("vertical");
-const homeIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1764962337/home_rmalaw.svg";
-const favIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968573/like_eclk8w.svg";
-const cartIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968566/cart_jsj3mh.svg";
-const API_BASE = process.env.REACT_APP_API_BASE;
-const CLOUDINARY_BASE = process.env.REACT_APP_CLOUDINARY_BASE;
-const getImageUrl = (url) => {
-  if (!url) return "";
-  if (url.startsWith("http")) return url; // رابط Cloudinary
-  return `${API_BASE}${url}`; // رابط من السيرفر
-};
+  const [layoutMode, setLayoutMode] = useState("vertical");
+  const homeIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406972/home_jgi9rf.svg";
+  const favIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408679/like_fuacbx.svg";
+  const cartIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406869/cart_lmsiod.svg";
+  const API_BASE = process.env.REACT_APP_API_BASE;
+  const CLOUDINARY_BASE = process.env.REACT_APP_CLOUDINARY_BASE;
+  const getImageUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url; // رابط Cloudinary
+    return `${API_BASE}${url}`; // رابط من السيرفر
+  };
   // 🟢 جلب بيانات المستخدم الحالي
   const fetchCurrentUser = async () => {
     try {
@@ -86,47 +87,47 @@ const getImageUrl = (url) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   // تعديل الكمية
- const updateQuantity = async (itemId, newQty) => {
-  if (!user) return;
-  if (newQty <= 0) {
-    handleRemoveFromCart(itemId);
-    return;
-  }
-  // 🔥 إيجاد المنتج في السلة
-  const itemIndex = cart.findIndex((i) => getItemId(i._id) === itemId);
-  if (itemIndex === -1) return;
-  const item = cart[itemIndex];
-  const currentQty = item.quantity;
-  // 🔥 المخزون الحقيقي (من populate)
-  const stock =
-    item.product?.stock ||
-    (typeof item.stock === "object"
-      ? Number(item.stock.$numberInt)
-      : item.stock) ||
-    0;
-  // إذا حاول يزيد أكثر من المخزون → منع (فقط عند الزيادة)
-  if (newQty > currentQty && newQty > stock) {
-    setAlertMessage(` لا يمكن طلب أكثر من ${stock} للمنتج "${item.name}"`);
-    setTimeout(() => setAlertMessage(""), 2500);
-    return;
-  }
-  // ✅ تحديث محلي سلس (optimistic update) للكمية والإجمالي فورًا
-  const updatedCart = [...cart];
-  updatedCart[itemIndex] = { ...item, quantity: newQty };
-  setCart(updatedCart); // يحدث الـ UI فورًا بدون إعادة تحميل
-  try {
-    await updateCartItem(user._id, itemId, { quantity: newQty });
-    // ✅ بعد نجاح الـ API، يمكن إعادة جلب إذا لزم (لكن مش ضروري للسلاسة)
-    // await fetchCurrentUser(); // أزل هذا لتجنب إعادة التحميل، اعتمد على التحديث المحلي
-  } catch (err) {
-    console.error("Failed to update quantity:", err);
-    // ✅ إذا فشل، عودة للقيمة القديمة (rollback)
-    updatedCart[itemIndex] = { ...item, quantity: currentQty };
-    setCart(updatedCart);
-    setAlertMessage("حدث خطأ أثناء تحديث الكمية 😔");
-    setTimeout(() => setAlertMessage(""), 2500);
-  }
-};
+  const updateQuantity = async (itemId, newQty) => {
+    if (!user) return;
+    if (newQty <= 0) {
+      handleRemoveFromCart(itemId);
+      return;
+    }
+    // 🔥 إيجاد المنتج في السلة
+    const itemIndex = cart.findIndex((i) => getItemId(i._id) === itemId);
+    if (itemIndex === -1) return;
+    const item = cart[itemIndex];
+    const currentQty = item.quantity;
+    // 🔥 المخزون الحقيقي (من populate)
+    const stock =
+      item.product?.stock ||
+      (typeof item.stock === "object"
+        ? Number(item.stock.$numberInt)
+        : item.stock) ||
+      0;
+    // إذا حاول يزيد أكثر من المخزون → منع (فقط عند الزيادة)
+    if (newQty > currentQty && newQty > stock) {
+      setAlertMessage(` لا يمكن طلب أكثر من ${stock} للمنتج "${item.name}"`);
+      setTimeout(() => setAlertMessage(""), 2500);
+      return;
+    }
+    // ✅ تحديث محلي سلس (optimistic update) للكمية والإجمالي فورًا
+    const updatedCart = [...cart];
+    updatedCart[itemIndex] = { ...item, quantity: newQty };
+    setCart(updatedCart); // يحدث الـ UI فورًا بدون إعادة تحميل
+    try {
+      await updateCartItem(user._id, itemId, { quantity: newQty });
+      // ✅ بعد نجاح الـ API، يمكن إعادة جلب إذا لزم (لكن مش ضروري للسلاسة)
+      // await fetchCurrentUser(); // أزل هذا لتجنب إعادة التحميل، اعتمد على التحديث المحلي
+    } catch (err) {
+      console.error("Failed to update quantity:", err);
+      // ✅ إذا فشل، عودة للقيمة القديمة (rollback)
+      updatedCart[itemIndex] = { ...item, quantity: currentQty };
+      setCart(updatedCart);
+      setAlertMessage("حدث خطأ أثناء تحديث الكمية 😔");
+      setTimeout(() => setAlertMessage(""), 2500);
+    }
+  };
   // حذف من السلة
   const handleRemoveFromCart = async (itemId) => {
     if (!user) return;
@@ -219,62 +220,62 @@ const getImageUrl = (url) => {
   // 🔹 الشريط السفلي
   return (
     <>
-<motion.div
-  style={{
-    ...styles.navbar(layoutMode),
-  }}
->
-  {/* زر الرئيسية */}
-  <motion.button
-    style={styles.iconBtn}
-    whileTap={{ scale: 0.9 }}
-    onClick={() => {
-      setActiveModal(null);
-      navigate("/");
-    }}
-  >
-    <img src={homeIcon} alt="Home" style={styles.icon} />
-  </motion.button>
-  {/* زر السلة */}
-  <motion.button
-    style={styles.iconBtn}
-    whileTap={{ scale: 0.9 }}
-    onClick={() => {
-      setActiveModal("cart");
-      fetchCurrentUser();
-    }}
-  >
-    <img src={cartIcon} alt="Cart" style={styles.icon} />
-    {cart.length > 0 && <span style={styles.badge}>{cart.length}</span>}
-  </motion.button>
-  {/* زر المفضلة */}
-  <motion.button
-    style={styles.iconBtn}
-    whileTap={{ scale: 0.9 }}
-    onClick={() => {
-      setActiveModal("fav");
-      fetchCurrentUser();
-    }}
-  >
-    <img src={favIcon} alt="Favorite" style={styles.bigFavIcon} />
-  </motion.button>
-  {/* زر تغيير الاتجاه */}
-  <motion.button
-    style={styles.iconBtn}
-    whileTap={{ scale: 0.9 }}
-    onClick={() =>
-      setLayoutMode((prev) =>
-        prev === "vertical" ? "horizontal" : "vertical"
-      )
-    }
-  >
-    {layoutMode === "vertical" ? (
-      <PanelRightClose size={26} color="#f1ebcc" />
-    ) : (
-      <PanelTopClose size={26} color="#f1ebcc" />
-    )}
-  </motion.button>
-</motion.div>
+      <motion.div
+        style={{
+          ...styles.navbar(layoutMode),
+        }}
+      >
+        {/* زر الرئيسية */}
+        <motion.button
+          style={styles.iconBtn}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            setActiveModal(null);
+            navigate("/");
+          }}
+        >
+          <img src={homeIcon} alt="Home" style={styles.icon} />
+        </motion.button>
+        {/* زر السلة */}
+        <motion.button
+          style={styles.iconBtn}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            setActiveModal("cart");
+            fetchCurrentUser();
+          }}
+        >
+          <img src={cartIcon} alt="Cart" style={styles.icon} />
+          {cart.length > 0 && <span style={styles.badge}>{cart.length}</span>}
+        </motion.button>
+        {/* زر المفضلة */}
+        <motion.button
+          style={styles.iconBtn}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            setActiveModal("fav");
+            fetchCurrentUser();
+          }}
+        >
+          <img src={favIcon} alt="Favorite" style={styles.bigFavIcon} />
+        </motion.button>
+        {/* زر تغيير الاتجاه */}
+        <motion.button
+          style={styles.iconBtn}
+          whileTap={{ scale: 0.9 }}
+          onClick={() =>
+            setLayoutMode((prev) =>
+              prev === "vertical" ? "horizontal" : "vertical"
+            )
+          }
+        >
+          {layoutMode === "vertical" ? (
+            <PanelRightClose size={26} color="#E1B866" /> // ← Sunlit Yellow للأيقونة
+          ) : (
+            <PanelTopClose size={26} color="#E1B866" />
+          )}
+        </motion.button>
+      </motion.div>
       {/* 🛒 نافذة السلة */}
       <AnimatePresence>
         {activeModal === "cart" && (
@@ -289,7 +290,7 @@ const getImageUrl = (url) => {
               handleRemoveFromCart={handleRemoveFromCart}
               navigate={navigate}
               getItemId={getItemId}
-               getImageUrl={getImageUrl}
+              getImageUrl={getImageUrl}
             />
           </>
         )}
@@ -298,7 +299,7 @@ const getImageUrl = (url) => {
       <AnimatePresence>
         {activeModal === "fav" && (
           <>
-           <FavSheet
+            <FavSheet
               favorites={favorites}
               loading={loading}
               screenHeight={screenHeight}
@@ -306,7 +307,7 @@ const getImageUrl = (url) => {
               handleAddToCart={handleAddToCart}
               handleRemoveFavorite={handleRemoveFavorite}
               getItemId={getItemId}
-               getImageUrl={getImageUrl}
+              getImageUrl={getImageUrl}
             />
           </>
         )}
@@ -328,7 +329,7 @@ const getImageUrl = (url) => {
     </>
   );
 };
-const CartSheet = ({ cart, loading, total, screenHeight, setActiveModal, updateQuantity, handleRemoveFromCart, navigate, getItemId ,getImageUrl, }) => {
+const CartSheet = ({ cart, loading, total, screenHeight, setActiveModal, updateQuantity, handleRemoveFromCart, navigate, getItemId, getImageUrl }) => {
   const sheetY = useMotionValue(0);
   const opacity = useTransform(sheetY, [0, screenHeight], [0.45, 0]);
   const paddingBottom = useTransform(sheetY, (y) => y);
@@ -343,7 +344,7 @@ const CartSheet = ({ cart, loading, total, screenHeight, setActiveModal, updateQ
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
       />
-     <motion.div
+      <motion.div
         style={{ ...styles.sheet, maxHeight: "100vh", y: sheetY }}
         initial={{ y: screenHeight }}
         animate={{ y: 0 }}
@@ -416,7 +417,7 @@ const CartSheet = ({ cart, loading, total, screenHeight, setActiveModal, updateQ
                           style={styles.smallIcon}
                         />
                       </button>
-                      <span>{quantity}</span>
+                      <span style={styles.quantityText}>{quantity}</span>
                       <button
                         style={styles.qtyBtn}
                         onClick={() =>
@@ -462,7 +463,7 @@ const CartSheet = ({ cart, loading, total, screenHeight, setActiveModal, updateQ
     </>
   );
 };
-const FavSheet = ({ favorites, loading, screenHeight, setActiveModal, handleAddToCart, handleRemoveFavorite, getItemId ,getImageUrl, }) => {
+const FavSheet = ({ favorites, loading, screenHeight, setActiveModal, handleAddToCart, handleRemoveFavorite, getItemId, getImageUrl }) => {
   const sheetY = useMotionValue(0);
   const opacity = useTransform(sheetY, [0, screenHeight], [0.45, 0]);
   const paddingBottom = useTransform(sheetY, (y) => y);
@@ -558,4 +559,237 @@ const FavSheet = ({ favorites, loading, screenHeight, setActiveModal, handleAddT
   );
 };
 export default BottomNav;
-const styles = {'badge': {'position': 'absolute', 'top': '-6px', 'right': '-6px', 'background': '#a0bebf', 'color': '#a0bebf', 'fontSize': '10px', 'fontWeight': 'bold', 'width': '18px', 'height': '18px', 'borderRadius': '50%', 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center'}, 'navbar': (mode) => ({'position': 'fixed', 'zIndex': 1000, 'background': 'rgba(160, 190, 191, 0.55)', 'backdropFilter': 'blur(10px)', 'WebkitBackdropFilter': 'blur(10px)', 'border': '1px solid rgba(255,255,255,0.25)', 'boxShadow': '0 8px 25px rgba(0,0,0,0.15)', 'borderRadius': '30px', 'display': 'flex', 'gap': '15px', ...(mode === 'vertical' ? {'top': '50%', 'left': '20px', 'transform': 'translateY(-50%)', 'flexDirection': 'column', 'width': '70px', 'height': 'auto', 'padding': '15px 0'} : {'bottom': '70px', 'left': '50%', 'transform': 'translateX(-50%)', 'flexDirection': 'row', 'justifyContent': 'space-around', 'alignItems': 'center', 'width': '90vw', 'maxWidth': '420px', 'height': '65px'})}), 'iconBtn': {'background': 'transparent', 'border': 'none', 'cursor': 'pointer', 'position': 'relative'}, 'icon': {'width': '35px', 'height': '35px'}, 'bigFavIcon': {'width': '30px', 'height': '30px'}, 'overlay': {'position': 'fixed', 'inset': 0, 'background': 'rgba(0,0,0,0.45)', 'zIndex': 1200}, 'sheet': {'position': 'fixed', 'bottom': 0, 'left': 0, 'width': '100vw', 'background': '#a0bebf', 'borderTopLeftRadius': '30px', 'borderTopRightRadius': '30px', 'boxShadow': '0 -4px 15px rgba(0,0,0,0.25)', 'padding': '5px', 'zIndex': 1300, 'height': '60vh', 'maxHeight': '85vh', 'overflow': 'hidden', 'display': 'flex', 'flexDirection': 'column'}, 'scroll': {'flex': 1, 'overflowY': 'auto', 'overflowX': 'hidden', 'paddingRight': '6px', 'WebkitOverflowScrolling': 'touch'}, 'toast': {'position': 'fixed', 'bottom': '90px', 'left': '50%', 'transform': 'translateX(-50%)', 'background': '#d15c1d', 'color': '#f1ebcc', 'padding': '10px 20px', 'borderRadius': '30px', 'fontSize': '14px', 'fontWeight': '600', 'boxShadow': '0 4px 10px rgba(0,0,0,0.2)', 'zIndex': 2000}, 'title': {'fontSize': '1.2rem', 'fontWeight': '700', 'marginBottom': '12px', 'textAlign': 'center', 'color': '#f1ebcc'}, 'emptyText': {'textAlign': 'center', 'color': '#f1ebcc ', 'marginTop': '20px'}, 'card': {'display': 'flex', 'alignItems': 'center', 'gap': '10px', 'background': '#f1ebcc', 'borderRadius': '20px', 'padding': '10px', 'boxShadow': '0 2px 6px rgba(0,0,0,0.08)'}, 'name': {'fontSize': '0.9rem', 'fontWeight': '600', 'color': '#493c33'}, 'price': {'fontSize': '0.8rem', 'fontWeight': '500', 'color': '#493c33'}, 'image': {'width': '60px', 'height': '60px', 'borderRadius': '18px', 'objectFit': 'cover', 'border': '1px solid #f2a72d'}, 'details': {'flex': 1, 'display': 'flex', 'flexDirection': 'column', 'gap': '5px'}, 'qtyBtn': {'backgroundColor': '#fff', 'borderRadius': '50%', 'width': '28px', 'height': '28px', 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'boxShadow': '0 2px 4px rgba(0,0,0,0.1)', 'border': 'none', 'padding': '0', 'cursor': 'pointer'}, 'deleteIcon': {'width': '28px', 'height': '28px', 'cursor': 'pointer'}, 'smallIcon': {'width': '22px', 'height': '22px', 'cursor': 'pointer'}, 'favActions': {'display': 'flex', 'gap': '22px', 'alignItems': 'center'}, 'footer': {'marginTop': '10px', 'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center', 'borderTop': '1px solid #f2a72d', 'paddingTop': '10px'}, 'total': {'fontSize': '1rem', 'color': '#f1ebcc', 'fontWeight': '600'}, 'checkoutBtn': {'background': 'linear-gradient(90deg,#6b7f4f,#6b7f4f)', 'border': 'none', 'borderRadius': '30px', 'padding': '10px 20px', 'fontWeight': '600', 'color': '#f1ebcc', 'cursor': 'pointer'}, '@media (max-width: 430px)': {'sheet': {'width': '100vw', 'height': '75vh'}, 'card': {'padding': '8px', 'gap': '8px'}, 'image': {'width': '55px', 'height': '55px'}}, 'loadingBar': {'height': '4px', 'background': 'linear-gradient(to right, #f2a72d, #d15c1d)', 'position': 'absolute', 'top': 0, 'left': 0, 'width': '100%'}};
+const styles = {
+  'badge': {
+    'position': 'absolute',
+    'top': '-6px',
+    'right': '-6px',
+    'background': '#4B0082', // ← Purple Jungle Bloom للبادج جذاب
+    'color': '#FFFFFF',
+    'fontSize': '10px',
+    'fontWeight': 'bold',
+    'width': '18px',
+    'height': '18px',
+    'borderRadius': '50%',
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+  },
+  'navbar': (mode) => ({
+    'position': 'fixed',
+    'zIndex': 1000,
+    'background': 'rgba(2, 37, 26, 0.55)', // ← Deep Jungle Green شفاف
+    'backdropFilter': 'blur(10px)',
+    'WebkitBackdropFilter': 'blur(10px)',
+    'border': '1px solid rgba(20, 80, 50, 0.25)', // حدود خضراء
+    'boxShadow': '0 8px 25px rgba(2, 37, 26, 0.15)', // ظل غابي
+    'borderRadius': '30px',
+    'display': 'flex',
+    'gap': '15px',
+    ...(mode === 'vertical' ? {
+      'top': '50%',
+      'left': '20px',
+      'transform': 'translateY(-50%)',
+      'flexDirection': 'column',
+      'width': '70px',
+      'height': 'auto',
+      'padding': '15px 0'
+    } : {
+      'bottom': '70px',
+      'left': '50%',
+      'transform': 'translateX(-50%)',
+      'flexDirection': 'row',
+      'justifyContent': 'space-around',
+      'alignItems': 'center',
+      'width': '90vw',
+      'maxWidth': '420px',
+      'height': '65px'
+    })
+  }),
+  'iconBtn': {
+    'background': 'transparent',
+    'border': 'none',
+    'cursor': 'pointer',
+    'position': 'relative',
+    'transition': 'transform 0.3s ease', // لتأثير hover
+    ':hover': { 'transform': 'scale(1.1)' }
+  },
+  'icon': {
+    'width': '35px',
+    'height': '35px'
+  },
+  'bigFavIcon': {
+    'width': '30px',
+    'height': '30px'
+  },
+  'overlay': {
+    'position': 'fixed',
+    'inset': 0,
+    'background': 'rgba(2, 37, 26, 0.45)', // ← Deep Jungle Green شفاف
+    'zIndex': 1200
+  },
+  'sheet': {
+    'position': 'fixed',
+    'bottom': 0,
+    'left': 0,
+    'width': '100vw',
+    'background': '#145032', // ← Lush Forest Green لخلفية الشيت
+    'borderTopLeftRadius': '30px',
+    'borderTopRightRadius': '30px',
+    'boxShadow': '0 -4px 15px rgba(2, 37, 26, 0.25)', // ظل غابي
+    'padding': '5px',
+    'zIndex': 1300,
+    'height': '60vh',
+    'maxHeight': '85vh',
+    'overflow': 'hidden',
+    'display': 'flex',
+    'flexDirection': 'column'
+  },
+  'scroll': {
+    'flex': 1,
+    'overflowY': 'auto',
+    'overflowX': 'hidden',
+    'paddingRight': '6px',
+    'WebkitOverflowScrolling': 'touch'
+  },
+  'toast': {
+    'position': 'fixed',
+    'bottom': '90px',
+    'left': '50%',
+    'transform': 'translateX(-50%)',
+    'background': '#A52A2A', // ← Red Fungus للتنبيهات
+    'color': '#FFFFFF',
+    'padding': '10px 20px',
+    'borderRadius': '30px',
+    'fontSize': '14px',
+    'fontWeight': '600',
+    'boxShadow': '0 4px 10px rgba(2, 37, 26, 0.2)', // ظل غابي
+    'zIndex': 2000
+  },
+  'title': {
+    'fontSize': '1.2rem',
+    'fontWeight': '700',
+    'marginBottom': '12px',
+    'textAlign': 'center',
+    'color': '#E1B866' // ← Sunlit Yellow للعناوين جذابة
+  },
+  'emptyText': {
+    'textAlign': 'center',
+    'color': '#E1B866', // ← Sunlit Yellow للنصوص
+    'marginTop': '20px'
+  },
+  'card': {
+    'display': 'flex',
+    'alignItems': 'center',
+    'gap': '10px',
+    'background': '#02251A', // ← Deep Jungle Green للكارد غامق
+    'borderRadius': '20px',
+    'padding': '10px',
+    'boxShadow': '0 2px 6px rgba(20, 80, 50, 0.08)', // ظل خفيف
+    'transition': 'transform 0.3s ease',
+    ':hover': { 'transform': 'scale(1.02)' } // hover لجذب
+  },
+  'name': {
+    'fontSize': '0.9rem',
+    'fontWeight': '600',
+    'color': '#E1B866' // ← Sunlit Yellow للأسماء
+  },
+  'price': {
+    'fontSize': '0.8rem',
+    'fontWeight': '500',
+    'color': '#FF7518' // ← Orange Mushroom للأسعار بارزة
+  },
+  'image': {
+    'width': '60px',
+    'height': '60px',
+    'borderRadius': '18px',
+    'objectFit': 'cover',
+    'border': '1px solid #E1B866' // ← Sunlit Yellow للحدود
+  },
+  'details': {
+    'flex': 1,
+    'display': 'flex',
+    'flexDirection': 'column',
+    'gap': '5px'
+  },
+  'qtyBtn': {
+    'backgroundColor': '#145032', // ← Lush Forest Green للأزرار
+    'borderRadius': '50%',
+    'width': '28px',
+    'height': '28px',
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+    'boxShadow': '0 2px 4px rgba(2, 37, 26, 0.1)',
+    'border': 'none',
+    'padding': '0',
+    'cursor': 'pointer',
+    'transition': 'background 0.3s ease',
+    ':hover': { 'backgroundColor': '#02251A' } // hover غامق
+  },
+  'deleteIcon': {
+    'width': '28px',
+    'height': '28px',
+    'cursor': 'pointer',
+    'transition': 'transform 0.3s ease',
+    ':hover': { 'transform': 'scale(1.2)' } // hover للحذف
+  },
+  'smallIcon': {
+    'width': '22px',
+    'height': '22px',
+    'cursor': 'pointer'
+  },
+  'favActions': {
+    'display': 'flex',
+    'gap': '22px',
+    'alignItems': 'center'
+  },
+  'footer': {
+    'marginTop': '10px',
+    'display': 'flex',
+    'justifyContent': 'space-between',
+    'alignItems': 'center',
+    'borderTop': '1px solid #E1B866', // ← Sunlit Yellow للحد
+    'paddingTop': '10px'
+  },
+  'total': {
+    'fontSize': '1rem',
+    'color': '#FF7518', // ← Orange Mushroom للإجمالي بارز
+    'fontWeight': '600'
+  },
+  'checkoutBtn': {
+    'background': '#FF7518', // ← Orange Mushroom لـ CTA إتمام الشراء
+    'border': 'none',
+    'borderRadius': '30px',
+    'padding': '10px 20px',
+    'fontWeight': '600',
+    'color': '#FFFFFF',
+    'cursor': 'pointer',
+    'transition': 'background 0.3s ease',
+    ':hover': { 'background': '#A52A2A' } // hover أحمر للإثارة
+  },
+  '@media (max-width: 430px)': {
+    'sheet': { 'width': '100vw', 'height': '75vh' },
+    'card': { 'padding': '8px', 'gap': '8px' },
+    'image': { 'width': '55px', 'height': '55px' }
+  },
+  'loadingBar': {
+    'height': '4px',
+    'background': 'linear-gradient(to right, #E1B866, #FF7518)', // ← تدرج أصفر/برتقالي
+    'position': 'absolute',
+    'top': 0,
+    'left': 0,
+    'width': '100%'
+  },
+  'quantityText': {
+    'color': '#E1B866', // ← Sunlit Yellow للعدد واضح ويتناسب مع الخلفية الغامقة
+    'fontSize': '1rem',
+    'fontWeight': '600',
+    'margin': '0 10px'
+  },
+  'actions': {
+    'display': 'flex',
+    'alignItems': 'center',
+    'gap': '5px'
+  }
+};

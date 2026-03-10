@@ -24,11 +24,16 @@ const AdminSections = () => {
   });
   const [isUploading, setIsUploading] = useState(false);
   const modalRef = useRef(null);
-   const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
-const ImageIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968571/image_anmq2j.svg";
-const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/edit_xmyhv0.svg";
-const DeleteIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968568/delete_kf2kz4.svg";
-const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/close_mcygjs.svg";
+  const SearchIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407020/search_wvv596.svg";
+  const ImageIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406971/image_ckumcg.svg";
+  const EditIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411103/edit_qr0z2r.svg";
+  const DeleteIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411122/delete_wfmwpp.svg";
+  const CloseIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770409276/close_ocjfbw.svg";
 
   // 🟢 جلب الأقسام عند الفتح
   useEffect(() => {
@@ -39,7 +44,6 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
     try {
       const res = await getSections();
       const data = res?.data || [];
-
       // ✅ تعديل روابط الصور: Cloudinary أو API_BASE
       const processed = data.map((sec) => ({
         ...sec,
@@ -72,24 +76,20 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) return alert("اسم القسم مطلوب!");
-
     setIsUploading(true);
     try {
       const payload = new FormData();
       payload.append("name", formData.name);
       payload.append("description", formData.description || "");
-
       if (formData.mainImage instanceof File) {
         payload.append("mainImage", formData.mainImage);
       }
-
       let saved;
       if (selectedSection) {
         saved = await updateSection(selectedSection._id, payload);
       } else {
         saved = await createSection(payload);
       }
-
       const updated = {
         ...saved.data,
         mainImage: saved.data.mainImage
@@ -98,13 +98,11 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
             : `${API_BASE}${saved.data.mainImage}`
           : null,
       };
-
       setSections((prev) =>
         selectedSection
           ? prev.map((s) => (s._id === selectedSection._id ? updated : s))
           : [updated, ...prev]
       );
-
       closeModal();
     } catch (err) {
       console.error("Save error:", err);
@@ -161,7 +159,7 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
   // 🔗 تحديد مصدر الصورة
   const getImageSrc = (src) =>
     src
-      ? src.startsWith("http")
+      ? src.startsWith("http") || src.startsWith("blob:")
         ? src
         : `${API_BASE}${src}`
       : ImageIcon;
@@ -180,9 +178,7 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
             className="search-input"
           />
           <img src={SearchIcon} alt="بحث" className="search-icon" />
-
         </div>
-
         {/* ➕ زر الإضافة */}
         <motion.button
           className="add-btn"
@@ -195,7 +191,6 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
         >
           <img src={PlusIcon} alt="إضافة" />
         </motion.button>
-
         {/* 📋 قائمة الأقسام */}
         <div className="sections-list">
           {filteredSections.length > 0 ? (
@@ -214,11 +209,9 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
                     onError={(e) => (e.target.src = ImageIcon)}
                   />
                 </div>
-
                 <div className="section-name">
                   <h3>{section.name}</h3>
                 </div>
-
                 <div className="section-actions">
                   <motion.button
                     className="edit-btn"
@@ -241,35 +234,29 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
             <p className="no-sections">لا توجد أقسام</p>
           )}
         </div>
-
         {/* 🪟 مودال الإضافة / التعديل */}
-        {/* 🪟 مودال الإضافة / التعديل */}
-<AnimatePresence>
-  {showModal && (
-    <motion.div
-      className="modal-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={closeModal}               // ← إغلاق عند النقر خارج المودال
-    >
-      <motion.div
-        ref={modalRef}
-        className="modal"
-        onClick={(e) => e.stopPropagation()}   // ← يمنع الإغلاق عند النقر داخل المودال
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-      >
-        <button className="close-btn" onClick={closeModal}>
-          <img src={CloseIcon} alt="إغلاق" />
-        </button>
-
-      
-
+        <AnimatePresence>
+          {showModal && (
+            <motion.div
+              className="modal-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeModal} // ← إغلاق عند النقر خارج المودال
+            >
+              <motion.div
+                ref={modalRef}
+                className="modal"
+                onClick={(e) => e.stopPropagation()} // ← يمنع الإغلاق عند النقر داخل المودال
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              >
+                <button className="close-btn" onClick={closeModal}>
+                  <img src={CloseIcon} alt="إغلاق" />
+                </button>
                 <h2>{selectedSection ? "تعديل القسم" : "إضافة قسم جديد"}</h2>
-
                 <form onSubmit={handleSubmit}>
                   <label className="image-picker">
                     <input
@@ -291,7 +278,6 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
                     </div>
                     <span>صورة القسم</span>
                   </label>
-
                   <input
                     type="text"
                     placeholder="اسم القسم"
@@ -301,7 +287,6 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
                     }
                     required
                   />
-
                   <textarea
                     placeholder="الوصف (اختياري)"
                     value={formData.description}
@@ -310,7 +295,6 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
                     }
                     rows={4}
                   />
-
                   <button
                     type="submit"
                     className="save-btn"
@@ -327,5 +311,4 @@ const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/
     </div>
   );
 };
-
 export default AdminSections;

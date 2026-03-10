@@ -2,7 +2,7 @@
 /* الغلاف العام */
 .account-container {
   min-height: 100vh;
-  background: #f1ebcc;
+  background: #02251A; /* ← Deep Jungle Green لخلفية غابية */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,9 +12,9 @@
 
 /* البطاقة الرئيسية */
 .account-card {
-  background: #fff;
+  background: #145032; /* ← Lush Forest Green للبطاقة */
   border-radius: 30px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 3px 15px rgba(2, 37, 26, 0.06); /* ظل غامق خفيف */
   padding: 25px 20px;
   width: 100%;
   max-width: 420px;
@@ -23,15 +23,15 @@
   flex-direction: column;
   gap: 18px;
 }
+
 /* العنوان */
 .account-title {
   font-size: 22px;
   font-weight: 700;
-  color: #6b7f4f;
+  color: #E1B866; /* ← Sunlit Yellow للعنوان جذاب */
   text-align: center;
   margin-bottom: 10px;
 }
-
 
 /* الحقول */
 .form-row {
@@ -39,28 +39,30 @@
   gap: 8px;
   margin-bottom: 10px;
 }
+
 .info-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #493c33;
+  border: 1px solid #02251A; /* ← Deep Jungle Green للحدود */
   border-radius: 30px;
   padding: 10px 14px;
-  background: #a0bebf;
+  background: #145032; /* ← Lush Forest Green للخلفية */
   transition: 0.3s;
 }
 
 .info-row:hover {
-  background: #f1ebcc;
+  background: #02251A; /* hover غامق */
 }
 
 .info-label {
   font-weight: 600;
   font-size: 15px;
-  color: #493c33;
+  color: #E1B866; /* ← Sunlit Yellow للنصوص */
 }
+
 .account-card input {
-  border: 1px solid #f2a72d;
+  border: 1px solid #E1B866; /* ← Sunlit Yellow للحدود */
   border-radius: 30px;
   padding: 10px;
   font-size: 15px;
@@ -68,21 +70,23 @@
   margin-bottom: 10px;
   transition: 0.2s;
   outline: none;
+  backgroundColor: #02251A; /* غامق للإنبوت */
+  color: #E1B866; /* نص أصفر */
 }
 
 .info-row input {
   flex: 1;
-  border: 1px solid #f2a72d;
+  border: 1px solid #E1B866;
   border-radius: 30px;
   padding: 6px 10px;
   font-size: 15px;
   font-family: "Tajawal", sans-serif;
-  color: #493c33;
+  color: #E1B866;
 }
 
 .info-row input:focus {
-  border-color: #f2a72d;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+  border-color: #FF7518; /* focus برتقالي */
+  box-shadow: 0 0 4px rgba(255, 117, 24, 0.2);
   outline: none;
 }
 
@@ -113,18 +117,20 @@
 .map-header span {
   font-weight: 600;
   font-size: 15px;
-  color: #6b7f4f;
+  color: #E1B866; /* ← Sunlit Yellow للنصوص */
 }
+
 .info-value {
   flex: 1;
   text-align: right;
   margin-right: 10px;
-  color: #555;
+  color: #FFFFFF; /* أبيض للقيم */
   font-weight: 500;
 }
+
 .account-card input:focus {
-  border-color: #f2a72d;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2);
+  border-color: #FF7518;
+  box-shadow: 0 0 4px rgba(255, 117, 24, 0.2);
 }
 
 /* الأزرار */
@@ -133,17 +139,17 @@
   padding: 10px;
   border: none;
   border-radius: 30px;
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-  color: #f1ebcc;
+  background: #FF7518; /* ← Orange Mushroom للزر CTA */
+  color: #FFFFFF;
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
 }
-.btn-save:hover {
-  transform: scale(1.03);
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-}
 
+.btn-save:hover {
+  background: #A52A2A; /* hover أحمر */
+  transform: scale(1.03);
+}
 
 /* أزرار التعديل */
 .action-buttons {
@@ -156,66 +162,19 @@
 .action-buttons button {
   border: none;
   border-radius: 30px;
-  background: #f1ebcc;
+  background: #145032; /* ← Lush Forest Green للأزرار */
   padding: 10px;
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s;
+  color: #E1B866; /* نص أصفر */
 }
 
 .action-buttons button:hover {
-  background: #a0bebf;
+  background: #02251A; /* hover غامق */
 }
 
-/* الموقع */
-.location-block {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.location-block img {
-  width: 22px;
-  height: 22px;
-  opacity: 0.8;
-}
-
-.location-block input {
-  flex: 1;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  padding: 9px;
-}
-
-.btn-locate {
-  border: none;
-  background: linear-gradient(90deg, #d15c1d, #f2a72d);
-  color: #f1ebcc;
-  padding: 8px 10px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 14px;
-}
-
-.btn-locate:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-}
-
-.map-frame {
-  width: 100%;
-  height: 200px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.map-frame:hover {
-  transform: scale(1.02);
-}
+/* أزرار الإعدادات */
 .account-actions {
   display: flex;
   flex-direction: column;
@@ -230,63 +189,119 @@
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
+  color: #FFFFFF;
 }
 
 button.username-btn {
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-  color: #f1ebcc;
+  background: #FF7518; /* ← Orange Mushroom */
 }
 
 button.password-btn {
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-  color: #f1ebcc;
+  background: #FF7518;
 }
 
 button.username-btn:hover {
-  background: linear-gradient(90deg, #d15c1d, #f2a72d);
+  background: #A52A2A; /* hover أحمر */
 }
 
 button.password-btn:hover {
-  background: linear-gradient(90deg, #d15c1d, #f2a72d);
+  background: #A52A2A;
+}
+
+/* الموقع */
+.location-block {
+  margin-top: 20px;
+  display: flex;
+  alignItems: "center";
+  gap: 8px;
+}
+
+.location-block img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+}
+
+.location-block input {
+  flex: 1;
+  border-radius: 10px;
+  border: 1px solid #E1B866; /* ← Sunlit Yellow للحدود */
+  padding: 9px;
+  backgroundColor: #02251A; /* غامق */
+  color: #E1B866;
+}
+
+.btn-locate {
+  border: none;
+  background: #FF7518; /* ← Orange Mushroom */
+  color: #FFFFFF;
+  padding: 8px 10px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.btn-locate:hover {
+  background: #A52A2A; /* hover أحمر */
+  transform: scale(1.05);
+}
+
+.map-frame {
+  width: 100%;
+  height: 200px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.map-frame:hover {
+  transform: scale(1.02);
 }
 
 /* النوافذ المنبثقة (Bottom Sheet) */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(2, 37, 26, 0.4); /* ← Deep Jungle Green شفاف */
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 1200;
+  zIndex: 1200;
 }
+
 .bottom-sheet {
   width: 100%;
   max-width: 480px;
-  background: #a0bebf;
+  background: #145032; /* ← Lush Forest Green للشيت */
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   padding: 25px;
   text-align: center;
   position: relative;
-  box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -3px 15px rgba(2, 37, 26, 0.08); /* ظل غابي */
 }
+
 .bottom-sheet h3 {
   margin-bottom: 15px;
-  color: #493c33;
+  color: #E1B866; /* ← Sunlit Yellow للعنوان */
 }
 
 .bottom-sheet input {
   width: 100%;
   margin: 8px 0;
   padding: 10px;
-  border: 1px solid #f2a72d;
+  border: 1px solid #E1B866; /* ← Sunlit Yellow للحدود */
   border-radius: 30px;
   font-size: 15px;
+  backgroundColor: #02251A; /* غامق */
+  color: #E1B866;
 }
+
 .bottom-sheet button {
-  background: linear-gradient(90deg, #6b7f4f, #6b7f4f);
-  color: #f1ebcc;
+  background: #FF7518; /* ← Orange Mushroom للأزرار */
+  color: #FFFFFF;
   padding: 10px;
   width: 100%;
   border-radius: 30px;
@@ -296,8 +311,9 @@ button.password-btn:hover {
   cursor: pointer;
   transition: 0.3s;
 }
+
 .bottom-sheet button:hover {
-  background: linear-gradient(90deg, #d15c1d, #f2a72d);
+  background: #A52A2A; /* hover أحمر */
 }
 
 .close-icon {
@@ -309,31 +325,25 @@ button.password-btn:hover {
   opacity: 0.7;
   transition: 0.2s;
 }
+
 .close-icon:hover {
   opacity: 1;
 }
 
 .address-preview {
-  background: #f0f7ff;
-  border: 1px solid #cce5ff;
-  color: #004085;
+  background: #02251A; /* غامق */
+  border: 1px solid #E1B866; /* ← Sunlit Yellow للحدود */
+  color: #E1B866; /* نص أصفر */
   border-radius: 10px;
   padding: 8px 12px;
   margin-top: 8px;
   font-size: 14px;
 }
-.map-frame {
-  border-radius: 12px;
-  width: 100%;
-  height: 250px;
-  border: none;
-  margin-top: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+
 /* 🔔 تنبيه خطأ داخل الـ Bottom Sheet */
 .sheet-alert {
-  background: #d15c1d;
-  color: #f1ebcc;
+  background: #A52A2A; /* ← Red Fungus للتنبيهات */
+  color: #FFFFFF;
   padding: 12px 16px;
   border-radius: 20px;
   text-align: center;
@@ -345,25 +355,21 @@ button.password-btn:hover {
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 
 /* 💡 تحسين عرض الجوال */
 @media (max-width: 480px) {
   .account-card {
     padding: 18px;
   }
-
   .btn-locate {
     font-size: 13px;
     padding: 7px 8px;
   }
-
   .bottom-sheet {
     padding: 18px;
   }
-
   .bottom-sheet h3 {
     font-size: 18px;
   }

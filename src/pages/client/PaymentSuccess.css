@@ -1,0 +1,64 @@
+.payment-page {
+  min-height: 100vh;
+  background: #02251A; /* أخضر غامق */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Tajawal";
+  padding: 20px;
+}
+
+.payment-card {
+  background: #145032; /* أخضر متوسط */
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.payment-title {
+  color: #FF7518; /* برتقالي */
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.payment-msg {
+  color: #E1B866; /* أصفر */
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.payment-btn {
+  background: linear-gradient(90deg, #E1B866, #FF7518); /* تدرج أصفر إلى برتقالي */
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: #02251A; /* أخضر غامق */
+  font-size: 18px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.payment-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Media Queries */
+@media (max-width: 480px) {
+  .payment-card {
+    padding: 20px;
+  }
+  .payment-title {
+    font-size: 24px;
+  }
+  .payment-msg {
+    font-size: 16px;
+  }
+  .payment-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}

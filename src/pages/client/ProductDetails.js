@@ -6,16 +6,13 @@ import {
   getUserById,
   addFavorite,
   addToCart,
-   removeFavorite,
+  removeFavorite,
 } from "../../api/api";
 import cartIcon from "../../assets/cart.svg";
 import arrowIcon from "../../assets/arrow-right.svg";
 import "./ProductDetails.css";
 import { AnimatePresence } from "framer-motion";
-
-
-const API_BASE = process.env.REACT_APP_API_BASE; // ✅ من env
-
+const API_BASE = process.env.REACT_APP_API_BASE;
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,27 +21,22 @@ const ProductDetails = () => {
   const [userFavorites, setUserFavorites] = useState([]);
   const [userCart, setUserCart] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-   const [showAuthModal, setShowAuthModal] = useState(false);
-
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const userId = user?._id || user?.id || null;
-
-  // ✅ دالة لتحديد رابط الصورة الصحيح (Cloudinary أو API_BASE)
+  const LikeIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408679/like_fuacbx.svg";
   const getImageUrl = (path) => {
-    if (!path) return "";
-    if (path.startsWith("http")) return path; // Cloudinary
-    return `${API_BASE}${path}`; // سيرفر
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    return `${API_BASE}${path}`;
   };
-
-  // 🔹 تحميل بيانات المنتج
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await getProductById(id);
         const data = res.data;
-        // ✅ معالجة الصور لتكون جاهزة للعرض
         data.mainImage = getImageUrl(data.mainImage);
         data.images = (data.images || []).map((img) => getImageUrl(img));
         setProduct(data);
@@ -54,8 +46,6 @@ const ProductDetails = () => {
     };
     fetchProduct();
   }, [id]);
-
-  // 🔹 تحميل بيانات المستخدم
   useEffect(() => {
     if (!userId) return;
     const fetchUserData = async () => {
@@ -73,61 +63,47 @@ const ProductDetails = () => {
     };
     fetchUserData();
   }, [userId]);
-
   if (!product)
     return <p style={{ textAlign: "center", marginTop: "40px" }}>جاري التحميل...</p>;
-
   const images = [product.mainImage, ...(product.images || [])].filter(Boolean);
-
-  // ❤️ المفضلة
- const handleFavorite = async () => {
-  if (!userId) {
-    setShowAuthModal(true);
-    return;
-  }
-
-  try {
-    const isFav = userFavorites.includes(product._id);
-
-    if (isFav) {
-      await removeFavorite(userId, product._id);
-      setUserFavorites((prev) => prev.filter((id) => id !== product._id));
-    } else {
-      await addFavorite(userId, { productId: product._id });
-      setUserFavorites((prev) => [...prev, product._id]);
+  const handleFavorite = async () => {
+    if (!userId) {
+      setShowAuthModal(true);
+      return;
     }
-  } catch (err) {
-    console.error("Error updating favorites:", err);
-  }
-};
-
-
-  // 🛒 السلة
+    try {
+      const isFav = userFavorites.includes(product._id);
+      if (isFav) {
+        await removeFavorite(userId, product._id);
+        setUserFavorites((prev) => prev.filter((id) => id !== product._id));
+      } else {
+        await addFavorite(userId, { productId: product._id });
+        setUserFavorites((prev) => [...prev, product._id]);
+      }
+    } catch (err) {
+      console.error("Error updating favorites:", err);
+    }
+  };
   const handleAddToCart = async () => {
-   if (!userId) {
-  setShowAuthModal(true);
-  return;
-}
-// 🛑 منع إضافة كمية تتجاوز المخزون
-const refreshedUser = await getUserById(userId);
-const freshCart = refreshedUser.data.cart || [];
-
-const cartItem = freshCart.find(
-  (item) =>
-    item.product === product._id ||
-    item.product?._id === product._id
-);
-
-const currentQty = cartItem ? cartItem.quantity : 0;
-const stock = product.stock || 0;
-
-if (currentQty + 1 > stock) {
-  setAlertMessage(`لا يمكنك إضافة أكثر من ${stock} من هذا المنتج`);
-  setShowAlert(true);
-  setTimeout(() => setShowAlert(false), 2500);
-  return;
-}
-
+    if (!userId) {
+      setShowAuthModal(true);
+      return;
+    }
+    const refreshedUser = await getUserById(userId);
+    const freshCart = refreshedUser.data.cart || [];
+    const cartItem = freshCart.find(
+      (item) =>
+        item.product === product._id ||
+        item.product?._id === product._id
+    );
+    const currentQty = cartItem ? cartItem.quantity : 0;
+    const stock = product.stock || 0;
+    if (currentQty + 1 > stock) {
+      setAlertMessage(`لا يمكنك إضافة أكثر من ${stock} من هذا المنتج`);
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2500);
+      return;
+    }
     try {
       await addToCart(userId, {
         product: product._id,
@@ -136,11 +112,9 @@ if (currentQty + 1 > stock) {
         mainImage: product.mainImage,
         quantity: 1,
       });
-
       setAlertMessage(`تمت إضافة "${product.name}" إلى السلة 🛒`);
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 2500);
-
       window.dispatchEvent(new Event("cartUpdated"));
     } catch (err) {
       console.error("Error adding to cart:", err);
@@ -149,7 +123,6 @@ if (currentQty + 1 > stock) {
       setTimeout(() => setShowAlert(false), 2500);
     }
   };
-
   return (
     <div className="product-details-container">
       <motion.div
@@ -158,7 +131,6 @@ if (currentQty + 1 > stock) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {/* 🖼️ الصور */}
         <div className="image-gallery">
           <div className="main-image-wrapper">
             <motion.img
@@ -172,7 +144,6 @@ if (currentQty + 1 > stock) {
               onError={(e) => (e.target.src = "/fallback.png")}
             />
           </div>
-
           {images.length > 1 && (
             <div className="thumbnail-strip">
               {images.map((img, i) => (
@@ -188,63 +159,69 @@ if (currentQty + 1 > stock) {
             </div>
           )}
         </div>
-
-        {/* 🏷️ الاسم والسعر */}
         <div className="product-header">
           <h2 className="product-name">{product.name}</h2>
           <p className="product-price">{product.price} ر.س</p>
         </div>
-
-        {/* الأزرار */}
-   {/* الأزرار */}
-<div className="actions-row">
-
-  {/* 🔥 لو المنتج مخزونه صفر → أرغب به */}
-  {product.stock === 0 ? (
-    <motion.div
-      className="notify-btn"
-      whileTap={{ scale: 0.9 }}
-      onClick={() => {
-        setAlertMessage(`سنعلمك عند توفر "${product.name}" 🔔`);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 2500);
-      }}
-    >
-      🔔 أرغب به
-    </motion.div>
-  ) : (
-    /* 🛒 المنتج متاح */
-    <motion.div
-      className="action-btn"
-      whileTap={{ scale: 0.9 }}
-      onClick={handleAddToCart}
-    >
-      <img src={cartIcon} alt="cart" />
-    </motion.div>
-  )}
-
-  {/* ❤️ المفضلة */}
-  <motion.div
-    className={`action-btn heart-btn ${
-      userFavorites.includes(product._id) ? "active" : ""
-    }`}
-    whileTap={{ scale: 0.9 }}
-    onClick={handleFavorite}
-  >
-    <span className="heart-symbol">
-      {userFavorites.includes(product._id) ? "❤" : "♡"}
-    </span>
-  </motion.div>
-
-</div>
-
-
-        {/* الوصف */}
+        <div className="actions-row">
+          {product.stock === 0 ? (
+            <motion.div
+              className="notify-btn"
+              whileTap={{ scale: 0.9 }}
+              onClick={() => {
+                setAlertMessage(`سنعلمك عند توفر "${product.name}" 🔔`);
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 2500);
+              }}
+            >
+              🔔 أرغب به
+            </motion.div>
+          ) : (
+            <motion.div
+              className="action-btn"
+              whileTap={{ scale: 0.9 }}
+              onClick={handleAddToCart}
+            >
+              <img src={cartIcon} alt="cart" />
+            </motion.div>
+          )}
+          <motion.div
+            className={`action-btn heart-btn ${
+              userFavorites.includes(product._id) ? "active" : ""
+            }`}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleFavorite}
+          >
+            <AnimatePresence mode="wait">
+              {userFavorites.includes(product._id) ? (
+                <motion.img
+                  key="liked"
+                  src={LikeIcon}
+                  alt="liked"
+                  className="heart-symbol"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1.2, opacity: 1, rotate: [0, 10, -10, 0] }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, type: "tween" }}
+                />
+              ) : (
+                <motion.span
+                  key="like"
+                  className="heart-symbol"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  ♡
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
         <p className="product-description">
           {product.description || "لا يوجد وصف متاح."}
         </p>
-
-        {/* 📍 المسار أسفل المربع */}
         {product.section && (
           <div className="breadcrumb inside-card">
             {product.category && (
@@ -273,8 +250,6 @@ if (currentQty + 1 > stock) {
           </div>
         )}
       </motion.div>
-
-      {/* 🛒 التنبيه */}
       {showAlert && (
         <motion.div
           className="cart-alert"
@@ -286,37 +261,32 @@ if (currentQty + 1 > stock) {
           {alertMessage}
         </motion.div>
       )}
-{/* 🌟 نافذة الانضمام (Bottom Sheet) */}
-<AnimatePresence>
-  {showAuthModal && (
-    <motion.div
-      className="auth-bottom-sheet"
-      initial={{ y: "100%" }}
-      animate={{ y: 0 }}
-      exit={{ y: "100%" }}
-      transition={{ duration: 0.3 }}
-    >
-      <p className="auth-message">انضم إلينا لتجربة التسوق الكاملة</p>
-
-      <button
-        className="auth-button"
-        onClick={() => (window.location.href = "/register")}
-      >
-        سجّل الآن
-      </button>
-
-      <button
-        className="auth-close"
-        onClick={() => setShowAuthModal(false)}
-      >
-        إغلاق
-      </button>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+      <AnimatePresence>
+        {showAuthModal && (
+          <motion.div
+            className="auth-bottom-sheet"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.3 }}
+          >
+            <p className="auth-message">انضم إلينا لتجربة التسوق الكاملة</p>
+            <button
+              className="auth-button"
+              onClick={() => (window.location.href = "/register")}
+            >
+              سجّل الآن
+            </button>
+            <button
+              className="auth-close"
+              onClick={() => setShowAuthModal(false)}
+            >
+              إغلاق
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
-
 export default ProductDetails;

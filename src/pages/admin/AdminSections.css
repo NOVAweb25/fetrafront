@@ -3,17 +3,18 @@
   display: flex;
   flex-direction: row-reverse;
   min-height: 100vh;
-  background: #f1ebcc;
+  background: linear-gradient(to bottom, #02251A, #145032); /* Deep Jungle to Lush Forest for forest depth */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .admin-sections-container {
   flex: 1;
-    background: #f1ebcc;
+  background: rgba(2, 37, 26, 0.8); /* Semi-transparent Deep Jungle for mystical overlay */
   padding: 24px;
   max-width: 1000px;
   margin: 0 auto;
   width: 100%;
+  backdrop-filter: blur(5px); /* Blurry effect for enchanted forest feel */
 }
 
 /* 🔍 تصميم حديث لخانة البحث */
@@ -28,16 +29,20 @@
   font-size: 17px;
   border: none;
   border-radius: 30px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    color: #E1B866; /* Sunlit Yellow text */
+  box-shadow: 0 4px 12px rgba(2, 37, 26, 0.3); /* Dark shadow for depth */
   outline: none;
   transition: all 0.2s ease;
   text-align: right;
   direction: rtl;
 }
 
+.search-input::placeholder {
+  color: #E1B866; /* Yellow placeholders */
+}
+
 .search-input:focus {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 16px rgba(2, 37, 26, 0.5);
 }
 
 .search-icon {
@@ -47,7 +52,7 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 /* Floating Add Button */
@@ -58,21 +63,20 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #6b7f4f;
+  background: #FF7518; /* Orange Mushroom for vibrant call-to-action */
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(160, 190, 191, 0.4);
-
+  box-shadow: 0 8px 20px rgba(255, 117, 24, 0.4); /* Glowing orange shadow */
   cursor: pointer;
   z-index: 100;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(160, 190, 191, 0.4);
-
+  transform: scale(1.1) rotate(90deg); /* Magical spin for fun */
+  box-shadow: 0 12px 24px rgba(255, 117, 24, 0.6);
 }
 
 .add-btn img {
@@ -83,79 +87,53 @@
 
 /* Section Card */
 .section-card {
-  background: #fff;
+  background: rgba(20, 80, 50, 0.6); /* Lush Forest semi-transparent for ethereal feel */
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(2, 37, 26, 0.4); /* Deep shadows like under canopy */
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: grab;
+  border: 1px solid rgba(75, 0, 130, 0.2); /* Purple border for magical bloom */
 }
 
 .section-card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-}
-
-.section-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 1;
-  direction: rtl;
+  box-shadow: 0 8px 20px rgba(2, 37, 26, 0.6);
+  transform: translateY(-4px) scale(1.02); /* Float up like floating spores */
 }
 
 .section-image img {
   width: 70px;
   height: 70px;
-  border-radius:30px;
+  border-radius: 50%; /* Circular for mushroom caps */
   object-fit: cover;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(2, 37, 26, 0.3);
+  transition: transform 0.3s ease;
 }
 
-.section-info {
+.section-image img:hover {
+  transform: rotate(10deg) scale(1.1); /* Slight twist for whimsy */
+}
+
+.section-name {
   flex: 1;
   text-align: right;
-  direction: rtl;
-  min-width: 0;
+  padding: 0 10px;
 }
 
-.section-info h3 {
-  margin: 0 0 6px;
-  font-size: 18px;
+.section-name h3 {
+  margin: 0;
+  font-size: 16px;
   font-weight: 600;
-  color: #d15c1d;
-  white-space: nowrap;
+  color: #E1B866; /* Yellow name for visibility */
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.section-desc {
-  margin: 0;
-  font-size: 14px;
-  color: #493c33;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  position: relative;
-}
-
-.read-more {
-  color: #007aff;
-  font-weight: 600;
-  cursor: pointer;
-  margin-right: 4px;
-}
-
-.read-more:hover {
-  text-decoration: underline;
+  white-space: nowrap;
 }
 
 /* Action Buttons */
@@ -175,29 +153,32 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .edit-btn {
-  background: #a0bebf;
+  background: #E1B866; /* Yellow for edit, sunlit */
 }
 
 .edit-btn:hover {
-  background: #a0bebf;
+  background: #FF7518; /* Orange hover for energy */
+  transform: rotate(15deg);
 }
 
 .delete-btn {
-  background: #a0bebf;
+  background: #A52A2A; /* Red for delete, warning fungus */
 }
 
 .delete-btn:hover {
-  background: #a0bebf;
+  background: #FF7518; /* Orange hover */
+  transform: rotate(-15deg);
 }
 
 .edit-btn img,
 .delete-btn img {
   width: 18px;
   height: 18px;
+  filter: brightness(0) invert(1); /* White icons */
 }
 
 /* Modal */
@@ -207,8 +188,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
+  background: rgba(2, 37, 26, 0.7); /* Deep Jungle overlay with blur */
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,15 +198,26 @@
 }
 
 .modal {
-  background: #a0bebf;
+  background: rgba(20, 80, 50, 0.9); /* Lush Forest for modal bg */
   border-radius: 20px;
   width: 100%;
   max-width: 420px;
   padding: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(2, 37, 26, 0.5);
   position: relative;
   direction: rtl;
   text-align: right;
+  border: 2px solid #4B0082; /* Purple border for enchantment */
+  animation: glow 2s infinite alternate; /* Subtle glowing for magic */
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 20px 40px rgba(2, 37, 26, 0.5);
+  }
+  to {
+    box-shadow: 0 20px 40px rgba(75, 0, 130, 0.3); /* Purple tint for enchantment */
+  }
 }
 
 .close-btn {
@@ -235,21 +227,24 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #f2f2f7;
+  background: #A52A2A; /* Red close button */
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
 }
 
 .close-btn:hover {
-  background: #e5e5ea;
+  background: #FF7518; /* Orange hover */
+  transform: scale(1.1);
 }
 
 .close-btn img {
   width: 16px;
   height: 16px;
+  filter: invert(1);
 }
 
 .modal h2 {
@@ -257,7 +252,8 @@
   font-size: 20px;
   font-weight: 600;
   text-align: center;
-  color: #a0bebf;
+  color: #4B0082; /* Purple title */
+  text-shadow: 0 1px 2px rgba(2, 37, 26, 0.3); /* Subtle shadow for depth */
 }
 
 .image-picker {
@@ -272,22 +268,22 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: #6b7f4f;
+  background: #02251A; /* Deep Jungle for image holder */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(75, 0, 130, 0.3); /* Purple glow */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.image-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(75, 0, 130, 0.5);
 }
 
 .image-circle img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.image-circle img[src^="blob:"],
-.image-circle img[src^="http"] {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -295,8 +291,9 @@
 
 .image-picker span {
   font-size: 14px;
-  color: #493c33;
+  color: #E1B866; /* Yellow label */
   font-weight: 500;
+  text-shadow: 0 1px 1px rgba(2, 37, 26, 0.2);
 }
 
 .modal form input,
@@ -304,19 +301,27 @@
   width: 100%;
   padding: 14px;
   font-size: 17px;
-  border: 1px solid #f2a72d;
+  border: 1px solid #4B0082; /* Purple border */
   border-radius: 30px;
-  background: #FFF;
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
+  color: #E1B866;
   outline: none;
   margin-bottom: 16px;
   text-align: right;
   direction: rtl;
   font-family: inherit;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.modal form input::placeholder,
+.modal form textarea::placeholder {
+  color: #E1B866;
 }
 
 .modal form input:focus,
 .modal form textarea:focus {
-  border-color: #f2a72d;
+  border-color: #FF7518; /* Orange focus */
+  box-shadow: 0 0 8px rgba(255, 117, 24, 0.4); /* Glowing focus */
 }
 
 .modal form textarea {
@@ -329,27 +334,32 @@
   font-size: 17px;
   font-weight: 600;
   color: white;
-  background: #6b7f4f;
+  background: #FF7518; /* Orange save button */
   border: none;
   border-radius: 30px;
   cursor: pointer;
   width: 100%;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 .save-btn:hover {
-  background: #6b7f4f;
+  background: #E1B866; /* Yellow hover */
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(225, 184, 102, 0.5); /* Yellow glow */
 }
 
 .save-btn:disabled {
-  background: #6b7f4f;
+  background: #A52A2A; /* Red disabled */
   cursor: not-allowed;
 }
 
 .no-sections {
   text-align: center;
-  color: #86868b;
+  color: #E1B866;
   font-size: 16px;
   margin-top: 40px;
+  opacity: 0.8;
+  text-shadow: 0 1px 2px rgba(2, 37, 26, 0.3);
 }
 
 /* تصميم أفقي للبطاقة (افتراضي للجوال) */
@@ -365,46 +375,12 @@
   border-radius: 14px;
 }
 
-/* الصورة */
-.section-card.horizontal .section-image img {
-  width: 70px;
-  height: 70px;
-  border-radius: 30px;
-  object-fit: cover;
-}
-
-/* الاسم */
-.section-card.horizontal .section-name {
-  flex: 1;
-  text-align: right;
-  padding: 0 10px;
-}
-
-.section-card.horizontal .section-name h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: #493c33;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* الأزرار */
-.section-card.horizontal .section-actions {
-  display: flex;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.section-card.horizontal .edit-btn,
-.section-card.horizontal .delete-btn {
-  width: 38px;
-  height: 38px;
-}
-
 /* 💻 للأجهزة الكبيرة فقط */
 @media (min-width: 768px) {
+  .admin-sections-container {
+    padding: 40px;
+  }
+
   .section-card.horizontal {
     padding: 16px 24px;
     min-width: 600px;
@@ -429,5 +405,53 @@
   .section-card.horizontal .delete-btn {
     width: 44px;
     height: 44px;
+  }
+
+  .modal {
+    max-width: 500px;
+    padding: 32px;
+  }
+
+  .image-circle {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* 📱 للجوال الصغير */
+@media (max-width: 480px) {
+  .admin-sections-container {
+    padding: 16px;
+  }
+
+  .add-btn {
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .section-card.horizontal {
+    padding: 12px 14px;
+  }
+
+  .section-card.horizontal .section-image img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .section-card.horizontal .section-name h3 {
+    font-size: 14px;
+  }
+
+  .section-card.horizontal .edit-btn,
+  .section-card.horizontal .delete-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .modal {
+    padding: 20px;
+    max-width: 90%;
   }
 }

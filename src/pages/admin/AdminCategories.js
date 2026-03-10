@@ -25,26 +25,28 @@ const AdminCategories = () => {
   });
   const [isUploading, setIsUploading] = useState(false);
   const modalRef = useRef(null);
-const DeleteIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968568/delete_kf2kz4.svg";
-const CloseIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/close_mcygjs.svg";
-
-const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
-const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/edit_xmyhv0.svg";
+  const DeleteIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411122/delete_wfmwpp.svg";
+  const CloseIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770409276/close_ocjfbw.svg";
+  const SearchIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
+  const EditIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406960/edit_la75z5.svg";
   useEffect(() => {
     fetchSections();
   }, []);
-
   useEffect(() => {
     if (sections.length > 0) fetchCategories();
   }, [sections]);
-
   const fetchCategories = async () => {
     try {
       const res = await getCategories();
       const data = res?.data || [];
       const processedData = data.map((cat) => {
-        const catSectionId = typeof cat.section === 'string' ? cat.section : cat.section?._id;
-        const sectionObj = sections.find(s => s._id === catSectionId);
+        const catSectionId =
+          typeof cat.section === "string" ? cat.section : cat.section?._id;
+        const sectionObj = sections.find((s) => s._id === catSectionId);
         return {
           ...cat,
           sectionName: sectionObj ? sectionObj.name : "غير محدد",
@@ -55,7 +57,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       console.error("Error fetching categories:", err);
     }
   };
-
   const fetchSections = async () => {
     try {
       const res = await getSections();
@@ -64,7 +65,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       console.error("Error fetching sections:", err);
     }
   };
-
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -74,18 +74,15 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
     if (showModal) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showModal]);
-
   const closeModal = () => {
     setShowModal(false);
     setSelectedCategory(null);
     resetForm();
   };
-
   const resetForm = () => {
     setFormData({ name: "", section: "", description: "", slug: "" });
     setIsUploading(false);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.section.trim()) {
@@ -106,17 +103,20 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       } else {
         savedCategory = await createCategory(payload);
       }
-      const savedSectionId = typeof savedCategory.data.section === 'string'
-        ? savedCategory.data.section
-        : savedCategory.data.section?._id;
-      const sectionObj = sections.find(s => s._id === savedSectionId);
+      const savedSectionId =
+        typeof savedCategory.data.section === "string"
+          ? savedCategory.data.section
+          : savedCategory.data.section?._id;
+      const sectionObj = sections.find((s) => s._id === savedSectionId);
       const processed = {
         ...savedCategory.data,
         sectionName: sectionObj ? sectionObj.name : "غير محدد",
       };
-      setCategories(prev =>
+      setCategories((prev) =>
         selectedCategory
-          ? prev.map(cat => cat._id === selectedCategory._id ? processed : cat)
+          ? prev.map((cat) =>
+              cat._id === selectedCategory._id ? processed : cat
+            )
           : [processed, ...prev]
       );
       closeModal();
@@ -126,22 +126,23 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
       setIsUploading(false);
     }
   };
-
   const handleDelete = async (id) => {
     if (window.confirm("هل أنت متأكد من الحذف؟")) {
       try {
         await deleteCategory(id);
-        setCategories(prev => prev.filter(cat => cat._id !== id));
+        setCategories((prev) => prev.filter((cat) => cat._id !== id));
       } catch (err) {
         alert("فشل الحذف");
         fetchCategories();
       }
     }
   };
-
   const handleEdit = (category) => {
     setSelectedCategory(category);
-    const sectionId = typeof category.section === 'string' ? category.section : category.section?._id || "";
+    const sectionId =
+      typeof category.section === "string"
+        ? category.section
+        : category.section?._id || "";
     setFormData({
       name: category.name || "",
       section: sectionId,
@@ -150,11 +151,9 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
     });
     setShowModal(true);
   };
-
-  const filteredCategories = categories.filter(cat =>
+  const filteredCategories = categories.filter((cat) =>
     cat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
   return (
     <div className="admin-layout">
       <AdminSidebar />
@@ -170,7 +169,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
           />
           <img src={SearchIcon} alt="بحث" className="search-icon" />
         </div>
-
         {/* Floating Add Button */}
         <motion.button
           className="add-btn"
@@ -183,7 +181,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
         >
           <img src={PlusIcon} alt="إضافة" />
         </motion.button>
-
         {/* Categories List */}
         {filteredCategories.length > 0 ? (
           filteredCategories.map((category) => (
@@ -213,7 +210,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                   )}
                 </div>
               </div>
-
               <div className="category-actions">
                 <motion.button
                   className="edit-btn"
@@ -235,7 +231,6 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
         ) : (
           <p className="no-categories">لا توجد تصنيفات</p>
         )}
-
         {/* Modal */}
         <AnimatePresence>
           {showModal && (
@@ -294,7 +289,19 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
                     }
                     rows={3}
                   />
-                                    <button type="submit" className="save-btn" disabled={isUploading}>
+                  <input
+                    type="text"
+                    placeholder="Slug (اختياري)"
+                    value={formData.slug}
+                    onChange={(e) =>
+                      setFormData({ ...formData, slug: e.target.value })
+                    }
+                  />
+                  <button
+                    type="submit"
+                    className="save-btn"
+                    disabled={isUploading}
+                  >
                     {isUploading ? "جاري الحفظ..." : "حفظ"}
                   </button>
                 </form>
@@ -306,5 +313,4 @@ const EditIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/e
     </div>
   );
 };
-
 export default AdminCategories;

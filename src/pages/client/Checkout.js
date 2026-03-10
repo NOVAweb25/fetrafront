@@ -1,4 +1,3 @@
-/* global Moyasar */ // موجود، لكن مع dynamic load مش ضروري
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -6,13 +5,14 @@ import {
   removeFromCart,
   updateUser,
   updateCartItem,
-  createOrder, // غير لو اسمها createOrderWithPaymentId
+  createOrder,
   uploadPaymentProof,
   createOrderWithProof,
 } from "../../api/api";
 import BottomNav from "../../components/BottomNav";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; // install npm i axios لو مش موجود، للـ API calls
+import axios from 'axios';
+import "./Checkout.css";
 const API_BASE = process.env.REACT_APP_API_BASE;
 const Checkout = () => {
   const userId = JSON.parse(localStorage.getItem("user"))?._id;
@@ -20,10 +20,10 @@ const Checkout = () => {
   const [cart, setCart] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const plusIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968591/plus_xwrg7i.svg";
-  const minusIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968578/minus_rpgpcr.svg";
-  const editIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/edit_xmyhv0.svg";
-  const deleteIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968568/delete_kf2kz4.svg";
+  const plusIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407003/plus_gazgpc.svg";
+  const minusIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406988/minus_hu6beu.svg";
+  const editIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411103/edit_qr0z2r.svg";
+  const deleteIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411122/delete_wfmwpp.svg";
   const [editData, setEditData] = useState({
     firstName: "",
     lastName: "",
@@ -43,17 +43,27 @@ const Checkout = () => {
   const totalProducts = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const delivery = 20;
   const total = totalProducts + delivery;
-  const PUBLIC_KEY = "pk_test_Q7YDAzTTP2WUQqyLGdHD9vSms6596uWUziq1Xu1x"; // test key
-  // ✅ تحميل Moyasar SDK dynamically
+  const PUBLIC_KEY = "pk_test_Q7YDAzTTP2WUQqyLGdHD9vSms6596uWUziq1Xu1x";
+  // ✅ تحميل Moyasar SDK dynamically من CDN جديد
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://js.moyasar.com/v1/moyasar.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.6/dist/moyasar.umd.min.js';
     script.async = true;
     script.onload = () => console.log('✅ Moyasar SDK loaded');
     script.onerror = () => console.error('❌ Failed to load Moyasar SDK');
     document.head.appendChild(script);
     return () => {
       document.head.removeChild(script);
+    };
+  }, []);
+  // ✅ تحميل CSS لـ Moyasar dynamically من CDN
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.jsdelivr.net/npm/moyasar-payment-form@2.2.6/dist/moyasar.css';
+    document.head.appendChild(link);
+    return () => {
+      document.head.removeChild(link);
     };
   }, []);
   const getImageUrl = (path) => {
@@ -84,7 +94,6 @@ const Checkout = () => {
       latitude: data.latitude || null,
       longitude: data.longitude || null,
     });
-    // تحقق إذا كانت البيانات ناقصة، فعرض وضع التحرير تلقائياً
     if (
       !data.firstName ||
       !data.lastName ||
@@ -120,12 +129,12 @@ const Checkout = () => {
           let city = "";
           let neighborhood = "";
           let street = "";
-          let nearestLandmark = ""; // يمكن ملؤه يدويًا، أو استخدام display_name إذا لزم
+          let nearestLandmark = "";
           if (geoData.address) {
             city = geoData.address.city || geoData.address.town || geoData.address.village || "";
             neighborhood = geoData.address.suburb || geoData.address.neighbourhood || "";
             street = geoData.address.road || "";
-            nearestLandmark = geoData.address.amenity || geoData.address.shop || ""; // اقتراح، يمكن تعديله
+            nearestLandmark = geoData.address.amenity || geoData.address.shop || "";
           }
           setEditData({
             ...editData,
@@ -191,7 +200,7 @@ const Checkout = () => {
   const handlePay = () => {
     if (!user.city || !user.neighborhood || !user.street || !user.nearestLandmark) {
       setAlertMessage("يرجى ملء جميع تفاصيل العنوان قبل الدفع.");
-      setIsEditing(true); // عرض خانات التعديل تلقائياً
+      setIsEditing(true);
       setTimeout(() => setAlertMessage(""), 3000);
       return;
     }
@@ -202,18 +211,17 @@ const Checkout = () => {
     }
     window.Moyasar.init({
       element: ".moyasar-form",
-      amount: total * 100, // هللة
+      amount: total * 100,
       currency: "SAR",
       description: `طلب جديد من ${user.firstName} ${user.lastName}`,
       publishable_api_key: PUBLIC_KEY,
-      callback_url: `${API_BASE}/api/payment/callback`, // backend endpoint
+      callback_url: `${API_BASE}/api/payment/callback`,
       methods: ["creditcard"],
-      supported_networks: ["visa", "mastercard", "mada"], // أضفته لدعم mada
+      supported_networks: ["visa", "mastercard", "mada"],
       on_completed: async (payment) => {
         console.log("🔔 Payment initiated from Moyasar:", payment);
         if (payment.status === "initiated") {
           try {
-            // 🟢 أنشئ order "pending" في Mongo مع paymentId
             const orderData = {
               user: userId,
               items: cart.map((item) => ({
@@ -230,18 +238,17 @@ const Checkout = () => {
                 neighborhood: user.neighborhood,
                 street: user.street,
                 nearestLandmark: user.nearestLandmark,
-                address: `${user.city || ''}, ${user.neighborhood || ''}, ${user.street || ''}, ${user.nearestLandmark || ''}`.trim(), // جمع العنوان من الحقول الجديدة
+                address: `${user.city || ''}, ${user.neighborhood || ''}, ${user.street || ''}, ${user.nearestLandmark || ''}`.trim(),
                 coords: [user.longitude, user.latitude],
               },
               subtotal: totalProducts,
               delivery,
               total,
               paymentId: payment.id,
-              paymentStatus: "initiated", // pending حتى verification
+              paymentStatus: "initiated",
             };
-            await createOrder(orderData); // أو axios.post(`${API_BASE}/api/orders`, orderData)
+            await createOrder(orderData);
             console.log("✅ Order created with pending status");
-            // أفرغ السلة محلياً (optimistic)
             setCart([]);
           } catch (err) {
             console.error("Create Order Error:", err);
@@ -257,21 +264,21 @@ const Checkout = () => {
   };
   return (
     <>
-      <div style={styles.page}>
+      <div className="checkout-page">
         <motion.div
-          style={styles.card}
+          className="checkout-card"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <h2 style={styles.header}>بياناتي</h2>
+          <h2 className="checkout-header">بياناتي</h2>
           {user && (
-            <div style={styles.box}>
+            <div className="checkout-box">
               <div
-                style={styles.editCircle}
+                className="edit-circle"
                 onClick={() => setIsEditing(!isEditing)}
               >
-                <img src={editIcon} alt="edit" style={{ width: 20 }} />
+                <img src={editIcon} alt="edit" className="small-icon" />
               </div>
               {!isEditing ? (
                 <>
@@ -284,7 +291,7 @@ const Checkout = () => {
                   <p>
                     <b>الموقع:</b>{" "}
                     {user.location ? (
-                      <a href={user.location} target="_blank" rel="noreferrer">
+                      <a className="meta-link" href={user.location} target="_blank" rel="noreferrer">
                         عرض على الخريطة
                       </a>
                     ) : (
@@ -300,13 +307,13 @@ const Checkout = () => {
                       title="map"
                       width="100%"
                       height="200"
-                      style={styles.map}
+                      className="map-iframe"
                       src={`https://maps.google.com/maps?q=${user.latitude},${user.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                     ></iframe>
                   )}
                 </>
               ) : (
-                <div style={styles.editArea}>
+                <div className="edit-area">
                   <input
                     type="text"
                     value={editData.firstName}
@@ -314,7 +321,7 @@ const Checkout = () => {
                       setEditData({ ...editData, firstName: e.target.value })
                     }
                     placeholder="الاسم الأول"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -323,7 +330,7 @@ const Checkout = () => {
                       setEditData({ ...editData, lastName: e.target.value })
                     }
                     placeholder="الاسم الأخير"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -332,9 +339,9 @@ const Checkout = () => {
                       setEditData({ ...editData, phone: e.target.value })
                     }
                     placeholder="رقم الجوال"
-                    style={styles.input}
+                    className="edit-input"
                   />
-                  <button style={styles.smallBtn} onClick={handleUpdateLocation}>
+                  <button className="small-btn" onClick={handleUpdateLocation}>
                     تحديد موقعي الحالي
                   </button>
                   <input
@@ -344,7 +351,7 @@ const Checkout = () => {
                       setEditData({ ...editData, location: e.target.value })
                     }
                     placeholder="أدخل رابط موقع من Google Maps"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -353,7 +360,7 @@ const Checkout = () => {
                       setEditData({ ...editData, city: e.target.value })
                     }
                     placeholder="المدينة"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -362,7 +369,7 @@ const Checkout = () => {
                       setEditData({ ...editData, neighborhood: e.target.value })
                     }
                     placeholder="الحي"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -371,7 +378,7 @@ const Checkout = () => {
                       setEditData({ ...editData, street: e.target.value })
                     }
                     placeholder="الشارع"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   <input
                     type="text"
@@ -380,63 +387,62 @@ const Checkout = () => {
                       setEditData({ ...editData, nearestLandmark: e.target.value })
                     }
                     placeholder="أقرب معلم"
-                    style={styles.input}
+                    className="edit-input"
                   />
                   {editData.latitude && editData.longitude && (
                     <iframe
                       title="map"
                       width="100%"
                       height="200"
-                      style={styles.map}
+                      className="map-iframe"
                       src={`https://maps.google.com/maps?q=${editData.latitude},${editData.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                     ></iframe>
                   )}
-                  <button style={styles.smallBtn} onClick={handleSaveEdit}>
+                  <button className="small-btn" onClick={handleSaveEdit}>
                     حفظ التعديل
                   </button>
                 </div>
               )}
             </div>
           )}
-          {/* 🛍️ المنتجات */}
-          <h2 style={styles.header}>المنتجات</h2>
-          <div style={styles.box}>
+          <h2 className="checkout-header">المنتجات</h2>
+          <div className="checkout-box">
             {cart.length > 0 ? (
               cart.map((item) => (
-                <div key={item._id} style={styles.productCard}>
+                <div key={item._id} className="product-card">
                   <img
                     src={getImageUrl(item.mainImage)}
                     alt={item.name}
-                    style={styles.productImg}
+                    className="product-img"
                     onError={(e) => (e.target.src = "/fallback.png")}
                   />
-                  <div style={{ flex: 1 }}>
+                  <div className="product-info">
                     <h4>{item.name}</h4>
                     <p>{item.price} ر.س</p>
-                    <div style={styles.actions}>
+                    <div className="actions">
                       <button
-                        style={styles.qtyBtn}
+                        className="qty-btn"
                         onClick={() =>
                           updateQuantity(item._id, item.quantity - 1)
                         }
                       >
-                        <img src={minusIcon} alt="-" style={styles.smallIcon} />
+                        <img src={minusIcon} alt="-" className="small-icon" />
                       </button>
                       <span>{item.quantity}</span>
                       <button
-                        style={styles.qtyBtn}
+                        className="qty-btn"
                         onClick={() =>
                           updateQuantity(item._id, item.quantity + 1)
                         }
                       >
-                        <img src={plusIcon} alt="+" style={styles.smallIcon} />
+                        <img src={plusIcon} alt="+" className="small-icon" />
                       </button>
                     </div>
                   </div>
                   <img
                     src={deleteIcon}
                     alt="delete"
-                    style={styles.deleteIcon}
+                    className="delete-icon"
                     onClick={() => handleRemoveItem(item._id)}
                   />
                 </div>
@@ -445,30 +451,28 @@ const Checkout = () => {
               <p>السلة فارغة</p>
             )}
           </div>
-          {/* 💰 الحساب النهائي */}
-          <h2 style={styles.header}>الملخص</h2>
-          <div style={styles.box}>
+          <h2 className="checkout-header">الملخص</h2>
+          <div className="checkout-box">
             <p>سعر المنتجات: {totalProducts} ر.س</p>
             <p>سعر التوصيل: {delivery} ر.س</p>
             <hr />
             <h3>الإجمالي: {total} ر.س</h3>
             <button
-              style={styles.confirmBtn}
+              className="confirm-btn"
               onClick={handlePay}
-              disabled={submitting} // لمنع clicks متعددة
+              disabled={submitting}
             >
               {submitting ? "جاري الدفع..." : "ادفع الآن"}
             </button>
           </div>
         </motion.div>
       </div>
-      <div className="moyasar-form"></div> {/* Moyasar form container */}
+      <div className="moyasar-form"></div>
       <BottomNav />
-      {/* 🔔 Toast */}
       <AnimatePresence>
         {alertMessage && (
           <motion.div
-            style={styles.toast}
+            className="toast"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -482,136 +486,3 @@ const Checkout = () => {
   );
 };
 export default Checkout;
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#f1ebcc",
-    padding: "20px",
-    fontFamily: "Tajawal, sans-serif",
-  },
-  card: { maxWidth: "500px", margin: "0 auto" },
-  header: { margin: "15px 0 10px", color: "#d15c1d" },
-  box: {
-    background: "#fff",
-    borderRadius: "30px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-    padding: "15px",
-    marginBottom: "15px",
-    position: "relative",
-  },
-  editCircle: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    width: "35px",
-    height: "35px",
-    borderRadius: "50%",
-    background: "#fff",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-  },
-  productCard: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    borderBottom: "1px solid #f2a72d",
-    padding: "8px 0",
-  },
-  productImg: { width: "60px", height: "60px", borderRadius: "30px" },
-  deleteIcon: { width: "20px", cursor: "pointer" },
-  editArea: { marginTop: "10px" },
-  input: {
-    width: "100%",
-    padding: "8px",
-    borderRadius: "10px",
-    border: "1px solid #f2a72d",
-    marginBottom: "8px",
-  },
-  smallBtn: {
-    background: "#6b7f4f",
-    border: "none",
-    borderRadius: "30px",
-    color: "#f1ebcc",
-    padding: "8px 12px",
-    cursor: "pointer",
-    marginBottom: "8px",
-  },
-  uploadLabel: {
-    display: "block",
-     background: "#6b7f4f",
-    color: "#f1ebcc",
-    padding: "10px",
-    borderRadius: "30px",
-    cursor: "pointer",
-    textAlign: "center",
-    marginTop: "10px",
-  },
-  fileName: {
-    marginTop: "5px",
-    fontSize: "14px",
-    color: "#6b7f4f",
-    textAlign: "center",
-  },
-  confirmBtn: {
-    width: "100%",
-    padding: "10px",
-    border: "none",
-    borderRadius: "30px",
-    background: "linear-gradient(90deg,#d15c1d,#f2a72d)",
-    fontWeight: "600",
-    color: "#f1ebcc",
-    marginTop: "10px",
-    cursor: "pointer",
-  },
-  map: { marginTop: "10px", borderRadius: "10px" },
-  actions: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    marginTop: "4px",
-  },
-  qtyBtn: {
-    backgroundColor: "#fff",
-    borderRadius: "50%",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    border: "none",
-    padding: "5px",
-    cursor: "pointer",
-  },
-  smallIcon: { width: "22px", height: "22px", cursor: "pointer" },
-  copyRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
-  },
- copyIcon: {
-  cursor: "pointer",
-  fontSize: "18px",
-  color: "#493c33",
-  transition: "0.2s",
-},
-copyIconHover: {
-  color: "#f2a72d",
-},
-  copiedText: {
-    color: "d15c1d",
-    fontSize: "14px",
-  },
-  toast: {
-    position: "fixed",
-    bottom: "90px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    background: "#d15c1d",
-    color: "#f1ebcc",
-    padding: "10px 20px",
-    borderRadius: "30px",
-    fontSize: "14px",
-    fontWeight: "600",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-    zIndex: 2000,
-  },
-};

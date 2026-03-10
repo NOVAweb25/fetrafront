@@ -1,6 +1,6 @@
 .admin-page {
   font-family: "Tajawal", sans-serif;
-  background: #f8f8f8;
+  background: linear-gradient(to bottom, #02251A, #145032); /* Deep Jungle to Lush Forest */
   min-height: 100vh;
   padding: 80px 15px 100px;
 }
@@ -14,7 +14,11 @@
   margin: 20px auto;
   width: 95%;
   max-width: 700px;
+  background: rgba(20, 80, 50, 0.8); /* Lush Forest semi-transparent */
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(2, 37, 26, 0.3);
 }
+
 .search-container.wide {
   width: 95%;
   max-width: 700px;
@@ -26,9 +30,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #a0bebf;
+  background: rgba(20, 80, 50, 0.9); /* Lush Forest */
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(2, 37, 26, 0.5);
   z-index: 9999;
   width: 90%;
   max-width: 380px;
@@ -36,6 +40,7 @@
   display: flex;
   flex-direction: column;
   animation: fadeInModal 0.3s ease;
+  border: 2px solid #4B0082; /* Purple border */
 }
 
 /* رأس النافذة */
@@ -43,14 +48,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #f2a72d;
+  border-bottom: 1px solid #4B0082; /* Purple */
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
 
 .popup-header h3 {
   font-size: 16px;
-  color: #493c33;
+  color: #E1B866; /* Yellow */
   margin: 0;
 }
 
@@ -58,12 +63,13 @@
   background: none;
   border: none;
   font-size: 20px;
-  color: #777;
+  color: #A52A2A; /* Red */
   cursor: pointer;
   transition: color 0.2s ease;
 }
+
 .close-popup:hover {
-  color: #000;
+  color: #FF7518; /* Orange */
 }
 
 /* جسم النافذة */
@@ -80,8 +86,8 @@
 .popup-option {
   padding: 10px 14px;
   border-radius: 30px;
-  background: #6b7f4f;
-  color: #f1ebcc;
+  background: #02251A; /* Deep Jungle */
+  color: #E1B866; /* Yellow */
   text-align: center;
   cursor: pointer;
   font-size: 14px;
@@ -90,27 +96,25 @@
 }
 
 .popup-option:hover {
-  background: #f2a72d;
+  background: #145032; /* Lush Forest */
 }
 
 .popup-option.active {
-  background: #f2a72d;
-  border-color: #f2a72d;
-  color: #493c33;
+  background: #FF7518; /* Orange */
+  border-color: #4B0082; /* Purple */
+  color: #02251A; /* Dark text */
   font-weight: bold;
 }
 
 /* الخلفية */
-
-
 .status-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: rgba(20, 80, 50, 0.9);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 25px rgba(2, 37, 26, 0.5);
   z-index: 6000;
   width: 90%;
   max-width: 380px;
@@ -119,31 +123,34 @@
   flex-direction: column;
   gap: 12px;
   animation: fadeInModal 0.25s ease;
+  border: 2px solid #4B0082;
 }
+
 .status-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #4B0082;
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
 
 .status-modal-header h3 {
   font-size: 16px;
-  color: #493c33;
+  color: #E1B866;
 }
 
 .close-modal-btn {
   background: none;
   border: none;
   font-size: 18px;
-  color: #666;
+  color: #A52A2A;
   cursor: pointer;
   transition: color 0.2s;
 }
+
 .close-modal-btn:hover {
-  color: #000;
+  color: #FF7518;
 }
 
 .status-modal-body {
@@ -155,35 +162,40 @@
 .status-modal .status-option {
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f8f8f8;
+  background: #02251A;
   text-align: center;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
+  color: #E1B866;
 }
+
 .status-modal .status-option:hover {
-  background: #f2f2f7;
+  background: #145032;
 }
+
 .status-modal .status-option.active {
-  background: #e7f0ff;
-  color: #007aff;
+  background: #FF7518;
+  color: #02251A;
   font-weight: bold;
-  border: 1px solid #007aff;
+  border: 1px solid #4B0082;
 }
+
 .search-input {
   flex: 1;
   padding: 12px 50px 12px 15px;
   border-radius: 25px;
-  border: 1px solid #ddd;
+  border: none;
   outline: none;
   font-size: 15px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
-  background: #fff;
+  background: transparent;
+  color: #E1B866;
   direction: rtl;
   transition: all 0.2s ease;
 }
+
 .search-input:focus {
-  box-shadow: 0 0 0 3px rgba(86, 142, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(255, 117, 24, 0.2); /* Orange glow */
 }
 
 .search-icon {
@@ -194,6 +206,7 @@
   opacity: 0.8;
   transition: opacity 0.2s;
 }
+
 .search-icon:hover {
   opacity: 1;
 }
@@ -210,11 +223,12 @@
   padding: 10px 14px;
   font-size: 15px;
   border-radius: 25px;
-  border: 1px solid #ddd;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #4B0082; /* Purple */
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
+  box-shadow: 0 2px 6px rgba(2, 37, 26, 0.3);
   outline: none;
   direction: rtl;
+  color: #E1B866;
 }
 
 /* 📋 قائمة الطلبات */
@@ -226,10 +240,10 @@
 }
 
 .order-card {
-  background: #fff;
+  background: rgba(20, 80, 50, 0.6); /* Lush Forest semi-transparent */
   border-radius: 18px;
   padding: 15px 18px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(2, 37, 26, 0.4);
   display: flex;
   justify-content: space-between;
   align-items: flex-start; /* 🔹 خليها من الأعلى عشان القائمة تنزل طبيعي */
@@ -238,6 +252,7 @@
   margin: 0 auto;
   position: relative; /* 🟢 يسمح للقائمة بالظهور فوقها */
   overflow: visible !important; /* 🟢 يمنع قص القائمة */
+  border: 1px solid rgba(75, 0, 130, 0.2); /* Purple border */
 }
 
 .order-card.wide {
@@ -246,10 +261,9 @@
   margin: 15px auto;
 }
 
-
 .order-card:active {
   transform: scale(0.98);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px rgba(2, 37, 26, 0.5);
 }
 
 .order-info {
@@ -258,9 +272,10 @@
   flex-direction: column;
   gap: 3px;
 }
+
 .order-number {
   font-weight: bold;
-  color: #121921;
+  color: #E1B866; /* Yellow */
 }
 
 .order-actions {
@@ -268,28 +283,30 @@
   align-items: center;
   gap: 10px; /* المسافة بين الحالة والفاتورة */
 }
+
 .client-name {
   font-size: 14px;
-  color: #333;
+  color: #E1B866;
 }
 
 .phone {
   font-size: 13px;
-  color: #777;
+  color: #E1B866;
 }
 
 .client-section {
-  background: #f9f9f9;
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
   font-size: 14px;
   line-height: 1.6;
+  color: #E1B866;
 }
 
 .client-section h4 {
   margin-bottom: 8px;
-  color: #121921;
+  color: #4B0082; /* Purple */
 }
 
 .client-map {
@@ -298,22 +315,22 @@
   border: none;
   margin-top: 6px;
   border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(75, 0, 130, 0.3); /* Purple glow */
 }
 
 .invoice-items-section h4 {
   margin-bottom: 8px;
-  color: #121921;
+  color: #4B0082;
 }
-
 
 /* 🎟️ أيقونة الفاتورة */
 .invoice-circle {
   width: 44px;
   height: 44px;
-  background: #fff;
+  background: #E1B866; /* Yellow */
   border-radius: 50%;
   border: none;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 10px rgba(2, 37, 26, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,43 +339,53 @@
 }
 
 .invoice-circle:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05) rotate(10deg);
+  box-shadow: 0 4px 12px rgba(2, 37, 26, 0.5);
+  background: #FF7518; /* Orange hover */
 }
 
 .invoice-circle img {
   width: 22px;
+  filter: invert(1);
 }
 
 /* 📦 حالة الطلب */
 .status-btn {
   position: relative;
-  background: #f9f9f9;
+  background: #02251A; /* Deep Jungle */
   border-radius: 30px;
   padding: 6px 14px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(2, 37, 26, 0.3);
   font-size: 13px;
-  color: #333;
+  color: #E1B866; /* Yellow */
   white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 130px;
   text-align: center;
+  transition: background 0.3s, transform 0.3s;
 }
+
+.status-btn:hover {
+  background: #145032; /* Lush Forest */
+  transform: scale(1.05);
+}
+
 .status-dropdown {
   position: absolute;
   top: calc(100% + 6px); /* 🟢 أسفل الزر مباشرة */
   left: 50%;
   transform: translateX(-50%);
-  background: #fff;
+  background: rgba(20, 80, 50, 0.9);
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(2, 37, 26, 0.5);
   z-index: 5000; /* 🟢 أعلى من كل العناصر */
   width: 180px;
   overflow: hidden;
   animation: fadeIn 0.2s ease;
+  border: 1px solid #4B0082;
 }
 
 .status-option {
@@ -366,24 +393,27 @@
   cursor: pointer;
   font-size: 14px;
   text-align: center;
-  border-bottom: 1px solid #eee;
-  background: #fff;
+  border-bottom: 1px solid #145032;
+  background: transparent;
   transition: background 0.2s ease;
+  color: #E1B866;
 }
 
 .status-option:hover {
-  background: #f2f2f7;
+  background: #FF7518; /* Orange */
 }
 
 .status-option:last-child {
   border-bottom: none;
 }
+
 /* 🧾 نافذة الفاتورة */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(2, 37, 26, 0.7);
   z-index: 90;
+  backdrop-filter: blur(10px);
 }
 
 .invoice-sheet {
@@ -391,16 +421,18 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #fff;
+  background: rgba(20, 80, 50, 0.9); /* Lush Forest */
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -4px 15px rgba(2, 37, 26, 0.5);
   padding: 20px;
   z-index: 100;
   max-height: 85vh;
   overflow-y: auto;
   animation: slideUp 0.4s ease;
+  border-top: 2px solid #4B0082; /* Purple */
 }
+
 @keyframes fadeInModal {
   from {
     opacity: 0;
@@ -411,6 +443,7 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -423,13 +456,13 @@
 }
 
 @keyframes slideUp {
-from {
+  from {
     opacity: 0;
-    transform: translate(-50%, -5px);
+    transform: translateY(100%);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
 }
 
@@ -437,35 +470,41 @@ from {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #4B0082; /* Purple */
   padding-bottom: 8px;
   margin-bottom: 12px;
 }
 
 .invoice-header h3 {
   font-size: 17px;
-  color: #121921;
+  color: #4B0082; /* Purple */
 }
 
 .close-btn {
   background: transparent;
   border: none;
   font-size: 16px;
-  color: #888;
+  color: #A52A2A; /* Red */
   cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: #FF7518; /* Orange */
 }
 
 .invoice-body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  color: #E1B866; /* Yellow text */
 }
 
 .invoice-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid #f2a72d;
+  border-bottom: 1px solid #145032; /* Lush Forest */
   padding-bottom: 8px;
 }
 
@@ -474,6 +513,7 @@ from {
   height: 60px;
   object-fit: cover;
   border-radius: 30px;
+  box-shadow: 0 2px 6px rgba(75, 0, 130, 0.3); /* Purple glow */
 }
 
 .invoice-summary {
@@ -482,50 +522,53 @@ from {
 }
 
 .invoice-summary h4 {
-  color: #493c33;
+  color: #4B0082; /* Purple */
   font-size: 16px;
   margin-top: 10px;
 }
 
 .total {
-  color: #f1ebcc;
+  color: #FF7518; /* Orange */
 }
 
 .share-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #007aff;
-  color: white;
+  background: #4B0082; /* Purple */
+  color: #E1B866; /* Yellow */
   border: none;
   border-radius: 10px;
   padding: 6px 12px;
   margin-top: 10px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  transition: background 0.3s, transform 0.3s;
 }
+
 .share-btn:hover {
-  background: #005ecb;
+  background: #FF7518; /* Orange */
+  transform: scale(1.05);
 }
 
 .receipt-box {
   margin-top: 15px;
   padding: 12px;
-  background: #f9f9f9;
+  background: rgba(2, 37, 26, 0.2); /* Light Deep Jungle */
   border-radius: 12px;
+  border: 1px solid #4B0082; /* Purple */
 }
 
 .receipt-file {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: #02251A; /* Deep Jungle */
+  border: 1px solid #4B0082; /* Purple */
   border-radius: 30px;
   padding: 10px 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;
-  color: #f1ebcc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: #E1B866; /* Yellow */
+  box-shadow: 0 2px 8px rgba(2, 37, 26, 0.3);
   text-align: center;
   margin-top: 6px;
   overflow: hidden;
@@ -534,35 +577,34 @@ from {
 }
 
 .receipt-file:hover {
-  background: #a0bebf;
-  border-color: #d15c1d;
-  box-shadow: 0 2px 10px rgba(86, 142, 255, 0.2);
+  background: #145032; /* Lush Forest */
+  border-color: #FF7518; /* Orange */
+  box-shadow: 0 2px 10px rgba(255, 117, 24, 0.4);
 }
 
 .receipt-preview {
   width: 100%;
   margin-top: 12px;
   border-radius: 30px;
-  border: 1px solid #f2a72d;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid #4B0082; /* Purple */
+  box-shadow: 0 2px 10px rgba(2, 37, 26, 0.3);
   object-fit: contain;
   max-height: 420px;
 }
-
 
 /* 🎯 تعديل نافذة تحديث الحالة لتظهر في منتصف شاشة الجوال */
 @media (max-width: 480px) {
   .status-popup {
     position: fixed;
-    top: 50%;                /* ✅ منتصف الشاشة عموديًا */
-    left: 50%;               /* ✅ منتصف الشاشة أفقيًا */
+    top: 50%; /* ✅ منتصف الشاشة عموديًا */
+    left: 50%; /* ✅ منتصف الشاشة أفقيًا */
     transform: translate(-50%, -50%) !important; /* ✅ توسيط دقيق */
-    width: 90%;              /* ✅ عرض مناسب للجوال */
+    width: 90%; /* ✅ عرض مناسب للجوال */
     max-width: 350px;
     padding: 18px;
     border-radius: 18px;
-    background: #fff;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    background: rgba(20, 80, 50, 0.9);
+    box-shadow: 0 10px 25px rgba(2, 37, 26, 0.5);
     z-index: 9999;
   }
 

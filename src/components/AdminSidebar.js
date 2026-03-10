@@ -11,26 +11,32 @@ const AdminSidebar = () => {
   const [openAccountMenu, setOpenAccountMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
-  const [position, setPosition] = useState(10); // State جديد للموقع (right: position px)
+  const [position, setPosition] = useState(10); // State جديد للموقع (left: position px)
   const sidebarRef = React.useRef(null);
   const API_BASE = process.env.REACT_APP_API_BASE;
   const productIcon =
-    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/productMang_p66aul.svg";
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407014/productMang_pezz4l.svg";
   const accountIcon =
-    "https://res.cloudinary.com/dp1bxbice/image/upload/v1764962209/person_iwqjor.svg";
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408843/person_zemcya.svg";
   const statsIcon =
-    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968567/dashboard_ajzvsa.svg";
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406947/dashboard_v8coub.svg";
   const logo =
-    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968581/logo_revtav.svg";
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770561234/logo_fetra_lmhd5m.svg";
   const toggleIcon =
-    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968565/back_xur01t.svg";
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770409132/back_oumcbi.svg";
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logoutUser(); // استدعاء API لتسجيل الخروج
+    } catch (err) {
+      console.error("خطأ أثناء تسجيل الخروج:", err);
+    }
     // 🔥 بث حدث تسجيل الخروج
     window.dispatchEvent(new Event("logout"));
     // 🔥 إغلاق نافذة التأكيد
     setShowLogoutModal(false);
+    navigate("/login"); // توجيه إلى صفحة الدخول بعد الخروج
   };
 
   const loadNotifications = async () => {
@@ -48,6 +54,15 @@ const AdminSidebar = () => {
     loadNotifications();
     const interval = setInterval(loadNotifications, 15000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition(window.innerWidth - 250); // ضبط الموقع الأولي على اليمين (right: ~10px)
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize(); // ضبط أولي
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -81,7 +96,6 @@ const AdminSidebar = () => {
           right: "auto", // إزالة right عشان ما يتعارضش
         }}
       >
-        {/* باقي الكود زي ما هو – ما غيّرت حاجة تانية */}
         {isOpen && (
           <div style={styles.logoContainer}>
             <div style={styles.logoCircle}>
@@ -178,10 +192,7 @@ const AdminSidebar = () => {
           </>
         )}
         {/* ▪️ زر الطي */}
-        <div
-          style={styles.toggleButton}
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        <div style={styles.toggleButton} onClick={() => setIsOpen(!isOpen)}>
           <img
             src={toggleIcon}
             alt="Toggle"
@@ -201,13 +212,13 @@ const AdminSidebar = () => {
             <p style={styles.modalText}>هل أنت متأكد أنك تريد تسجيل الخروج؟</p>
             <div style={styles.modalButtons}>
               <button
-                style={{ ...styles.button, background: "#f1ebcc" }}
+                style={{ ...styles.button, background: "#FF7518" }} // ← Orange Mushroom للأزرار الرئيسية
                 onClick={handleLogout}
               >
                 نعم
               </button>
               <button
-                style={{ ...styles.button, background: "#f1ebcc" }}
+                style={{ ...styles.button, background: "#A52A2A" }} // ← Red Fungus للإلغاء
                 onClick={() => setShowLogoutModal(false)}
               >
                 إلغاء
@@ -222,40 +233,22 @@ const AdminSidebar = () => {
 
 export default AdminSidebar;
 
-
-
-
- 
 /* 🎨 الأنماط */
 const styles = {
-sidebar: {
-  position: "fixed",
-  top: 60,
-  right: 10,
-  backdropFilter: "blur(12px)",
-  backgroundColor: "rgba(160, 190, 191, 0.35)",
-  borderRadius: "16px",
-  border: "1px solid rgba(255, 255, 255, 0.25)",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-  padding: "12px 8px",
-  boxShadow: "0 4px 18px rgba(0,0,0,0.15)",
-  zIndex: 2000,
-  fontFamily: fonts.primary,
-},
-
-
-  toast: {
+  sidebar: {
     position: "fixed",
-    top: "20px",
-    right: "20px",
-    background: "#d15c1d",
-    color: "#f1ebcc",
-    padding: "15px 20px",
-    borderRadius: "30px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-    zIndex: 3000,
+    top: 60,
+    backdropFilter: "blur(12px)",
+    backgroundColor: "rgba(2, 37, 26, 0.35)", // ← Deep Jungle Green #02251A شفاف للخلفية الرئيسية
+    borderRadius: "16px",
+    border: "1px solid rgba(2, 37, 26, 0.25)", // حدود غامقة
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    padding: "12px 8px",
+    boxShadow: "0 4px 18px rgba(2, 37, 26, 0.15)", // ظل غابي
+    zIndex: 2000,
+    fontFamily: fonts.primary,
   },
   logoContainer: {
     display: "flex",
@@ -265,7 +258,7 @@ sidebar: {
     marginBottom: "10px",
   },
   logoCircle: {
-    background: "#f1ebcc",
+    background: "#E1B866", // ← Sunlit Yellow للدائرة
     borderRadius: "50%",
     padding: "10px",
     width: "60px",
@@ -280,7 +273,7 @@ sidebar: {
     flexDirection: "column",
     gap: "6px",
     width: "100%",
-    padding: "0 6px",
+    padding: "0 0px",
   },
   menuItem: {
     display: "flex",
@@ -289,16 +282,17 @@ sidebar: {
     padding: "10px",
     borderRadius: "30px",
     textDecoration: "none",
-    color: "#493c33",
+    color: "#FFFFFF", // نص أبيض للتباين الجيد
     fontSize: "15px",
     fontWeight: "500",
     cursor: "pointer",
     width: "100%",
     transition: "background 0.3s",
+    background: "rgba(20, 80, 50, 0.1)", // ← Lush Forest Green خفيف للعناصر الرئيسية
   },
-  icon: { width: "40px", height: iconSizes.large },
+  icon: { width: "30px", height: iconSizes.large },
   menuText: { whiteSpace: "nowrap", flexGrow: 1 },
-  arrow: { fontSize: "12px" },
+  arrow: { fontSize: "12px", color: "#4B0082" }, // ← Purple Jungle Bloom للعناصر السحرية مثل الأسهم
   subMenu: {
     display: "flex",
     flexDirection: "column",
@@ -307,30 +301,30 @@ sidebar: {
     gap: "6px",
   },
   subMenuItem: {
-  color: "#f1ebcc",
-  background: "rgba(107, 127, 79, 0.35)", // ← 6b7f4f مع شفافية
-  textDecoration: "none",
-  padding: "8px 12px",
-  fontSize: "14px",
-  borderRadius: "30px",
-  transition: "all 0.2s",
-},
-
+    color: "#FFFFFF", // نص أبيض للتباين
+    background: "rgba(20, 80, 50, 0.35)", // ← Lush Forest Green شفاف للعناصر الفرعية
+    textDecoration: "none",
+    padding: "8px 12px",
+    fontSize: "14px",
+    borderRadius: "30px",
+    transition: "all 0.2s",
+  },
   toggleButton: {
     cursor: "pointer",
     alignSelf: "center",
     marginTop: "8px",
   },
   logoutButton: {
-    padding: "10px",
+    padding: "5px",
     marginTop: "10px",
-    background: "#6b7f4f",
-    color: "#f1ebcc",
+    background: "#FF7518", // ← Orange Mushroom للأزرار التشجيعية
+    color: "#FFFFFF",
     textAlign: "center",
     borderRadius: "30px",
     cursor: "pointer",
     fontWeight: "bold",
     width: "100%",
+    transition: "all 0.3s",
   },
   modalOverlay: {
     position: "fixed",
@@ -338,23 +332,23 @@ sidebar: {
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(2, 37, 26, 0.5)", // ← Deep Jungle Green شفاف
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     zIndex: 2000,
   },
   modal: {
-    background: "#a0bebf",
+    background: "#02251A", // ← Deep Jungle Green للمودال الرئيسي
     padding: "20px",
     borderRadius: "30px",
     width: "90%",
     maxWidth: "320px",
     textAlign: "center",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+    boxShadow: "0 6px 20px rgba(2, 37, 26, 0.2)",
   },
-  modalTitle: { fontSize: "18px", color: "#f1ebcc", marginBottom: "10px" },
-  modalText: { fontSize: "14px", color: "#493c33", marginBottom: "20px" },
+  modalTitle: { fontSize: "18px", color: "#4B0082", marginBottom: "10px" }, // ← Purple Jungle Bloom للعناوين
+  modalText: { fontSize: "14px", color: "#FFFFFF", marginBottom: "20px" }, // أبيض للنص
   modalButtons: {
     display: "flex",
     justifyContent: "space-between",
@@ -365,8 +359,20 @@ sidebar: {
     padding: "5px",
     border: "none",
     borderRadius: "30px",
-    color: "#d15c1d",
+    color: "#FFFFFF",
     cursor: "pointer",
     fontFamily: fonts.primary,
+  },
+  badge: {
+    position: "absolute",
+    top: "-5px",
+    right: "10px",
+    background: "#A52A2A", // ← Red Fungus للتنبيهات
+    color: "#FFFFFF",
+    borderRadius: "50%",
+    padding: "0px 6px",
+    fontSize: "12px",
+    minWidth: "18px",
+    textAlign: "center",
   },
 };

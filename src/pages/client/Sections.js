@@ -9,13 +9,12 @@ import {
   updateCartItem,
   removeFromCart,
   getUserById,
-  getProductById, // ✅ أضف هذا الـ import من api/api.js إذا لزم
+  getProductById,
 } from "../../api/api";
 import CloseIcon from "../../assets/close.svg";
-import CartIcon from "../../assets/cart.svg";
 import "./Sections.css";
 import { useNavigate, useLocation } from "react-router-dom";
-const API_BASE = process.env.REACT_APP_API_BASE; // ✅ من env
+const API_BASE = process.env.REACT_APP_API_BASE;
 const Sections = () => {
   const [sections, setSections] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -34,15 +33,19 @@ const Sections = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const sectionsRef = useRef(null);
-  const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
+  const SearchIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407020/search_wvv596.svg";
+  const CartIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406869/cart_lmsiod.svg";
+  const LikeIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408679/like_fuacbx.svg";
   const rawUser = localStorage.getItem("user");
   const user = rawUser ? JSON.parse(rawUser) : null;
   const userId = user?._id || user?.id || null;
-  // ✅ دالة مساعدة لتحديد رابط الصورة الصحيح
   const getImageUrl = (path) => {
     if (!path) return "";
-    if (path.startsWith("http")) return path; // من Cloudinary
-    return `${API_BASE}${path}`; // من السيرفر
+    if (path.startsWith("http")) return path;
+    return `${API_BASE}${path}`;
   };
   const normalizeId = (id) => {
     if (!id) return "";
@@ -50,10 +53,9 @@ const Sections = () => {
     if (id.$oid) return id.$oid;
     return id.toString();
   };
-  // 🔹 تحميل الأقسام
   useEffect(() => {
     (async () => {
-      setLoading(true); // بدء التحميل للأقسام
+      setLoading(true);
       try {
         const res = await getSections();
         const data = res.data.map((s) => ({
@@ -66,7 +68,7 @@ const Sections = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // انتهاء التحميل
+        setLoading(false);
       }
     })();
   }, []);
@@ -86,7 +88,7 @@ const Sections = () => {
   useEffect(() => {
     if (!selectedSection) return;
     (async () => {
-      setLoading(true); // بدء التحميل للتصنيفات
+      setLoading(true);
       try {
         const res = await getCategories();
         const filtered = res.data.filter(
@@ -96,28 +98,27 @@ const Sections = () => {
       } catch (e) {
         console.error(e);
       } finally {
-        setLoading(false); // انتهاء التحميل
+        setLoading(false);
       }
     })();
   }, [selectedSection]);
   useEffect(() => {
     const fetchProducts = async () => {
       if (!selectedSection) return;
-      setLoading(true); // بدء التحميل للمنتجات
+      setLoading(true);
       try {
         const res = await getProducts({ sectionId: normalizeId(selectedSection._id) });
         const data = res.data
-          // لا نحذف المنتجات، فقط نعرضها كلها
           .map((p) => ({
             ...p,
             mainImage: getImageUrl(p.mainImage),
-            stock: p.stock ?? 0, // ✅ ضمن وجود stock في الـ products state
+            stock: p.stock ?? 0,
           }));
         setProducts(data);
       } catch (err) {
         console.error("Error loading section products:", err);
       } finally {
-        setLoading(false); // انتهاء التحميل
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -138,7 +139,7 @@ const Sections = () => {
       const data = res.data.map((p) => ({
         ...p,
         mainImage: getImageUrl(p.mainImage),
-        stock: p.stock ?? 0, // ✅ ضمن stock
+        stock: p.stock ?? 0,
       }));
       setProducts(data);
     } catch (err) {
@@ -160,7 +161,7 @@ const Sections = () => {
         mainImage: p.mainImage?.startsWith("http")
           ? p.mainImage
           : `${API_BASE}${p.mainImage}`,
-        stock: p.stock ?? 0, // ✅ ضمن stock
+        stock: p.stock ?? 0,
       }));
       setProducts(data);
     } catch (e) {
@@ -169,7 +170,6 @@ const Sections = () => {
       setLoading(false);
     }
   };
-  // ✅ تحميل القسم والتصنيف من الرابط
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const sectionId = params.get("sectionId");
@@ -197,17 +197,16 @@ const Sections = () => {
       }
     })();
   }, [sections, location]);
-  // ✅ تحميل جميع المنتجات إذا لا يوجد قسم محدد
   useEffect(() => {
     const fetchAllProducts = async () => {
-      if (selectedSection) return; // ❗ مهم: إذا فيه قسم محدد لا تجيب الكل
+      if (selectedSection) return;
       setLoading(true);
       try {
         const res = await getProducts({});
         const data = res.data.map((p) => ({
           ...p,
           mainImage: getImageUrl(p.mainImage),
-          stock: p.stock ?? 0, // ✅ ضمن stock
+          stock: p.stock ?? 0,
         }));
         setProducts(data);
       } catch (err) {
@@ -217,12 +216,17 @@ const Sections = () => {
       }
     };
     fetchAllProducts();
-  }, [selectedSection]); // ❗ تتغير فقط لما القسم يتغير
-  // ✅ إلغاء التحديد عند النقر خارج الأقسام
+  }, [selectedSection]);
   const filteredSections = sections.filter(
     (section) =>
       section.name.toLowerCase().includes(search.toLowerCase()) ||
       section.description?.toLowerCase().includes(search.toLowerCase())
+  );
+  // ✅ إضافة فلترة للمنتجات بناءً على البحث
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.description?.toLowerCase().includes(search.toLowerCase())
   );
   const handleFavorite = async (product) => {
     if (!userId) {
@@ -251,11 +255,10 @@ const Sections = () => {
       setShowAuthModal(true);
       return;
     }
-    // 🔥 جلب stock طازج دائمًا من API لضمان القيمة الحقيقية (حل مشكلة الـ 0)
     let stock = 0;
     try {
       const productRes = await getProductById(product._id);
-      stock = productRes.data.stock ?? 0; // ✅ ضمن وجود stock في الـ products state
+      stock = productRes.data.stock ?? 0;
     } catch (err) {
       console.error("❌ Error fetching product stock:", err);
       setAlertMessage("حدث خطأ أثناء التحقق من المخزون 😔");
@@ -263,7 +266,6 @@ const Sections = () => {
       setTimeout(() => setShowAlert(false), 2500);
       return;
     }
-    // 🔥 جلب السلة الطازجة من API
     const refreshedUser = await getUserById(userId);
     const freshCart = refreshedUser.data.cart || [];
     const cartItem = freshCart.find(
@@ -271,7 +273,6 @@ const Sections = () => {
         normalizeId(item.product?._id || item.product) === normalizeId(product._id)
     );
     const currentQty = cartItem ? cartItem.quantity : 0;
-    // 🔥 التحقق: فقط إذا الكمية الحالية +1 > stock، رفض الإضافة
     if (currentQty + 1 > stock) {
       setAlertMessage(`لا يمكنك إضافة أكثر من ${stock} من هذا المنتج`);
       setShowAlert(true);
@@ -297,7 +298,6 @@ const Sections = () => {
       setTimeout(() => setShowAlert(false), 2500);
     }
   };
-  // 🔔 دالة جديدة للإشعار بالرغبة في المنتج
   const handleNotifyInterest = async (product) => {
     if (!userId) {
       setShowAuthModal(true);
@@ -324,7 +324,17 @@ const Sections = () => {
   const closeDetails = () => setExpandedSection(null);
   return (
     <div className="sections-container">
-      {/* ⭐ العنوان + زر الكل في نفس السطر */}
+      {/* ✅ إضافة شريط بحث لتسهيل التسوق */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="ابحث عن قسم أو منتج..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <img src={SearchIcon} alt="search" className="search-icon" />
+      </div>
+      {/* ⭐ العنوان + زر الكل */}
       <div className="header-row">
         <motion.h2
           className="page-title"
@@ -356,7 +366,7 @@ const Sections = () => {
             whileHover={{ scale: 1.05 }}
             onClick={() => {
               setSelectedSection(section);
-              setSelectedCategory(null); // ❗ مهم جداً
+              setSelectedCategory(null);
             }}
           >
             <div className="section-image-wrapper">
@@ -404,15 +414,15 @@ const Sections = () => {
       )}
       {loading && <div className="loading-bar"></div>}
       {loading && <p className="loading-text">جاري تحميل المنتجات...</p>}
-      {/* 🛍️ المنتجات */}
-      {products.length > 0 && (
+      {/* 🛍️ المنتجات مع الفلترة */}
+      {filteredProducts.length > 0 && (
         <motion.div
           className="products-grid"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          {products.map((product, index) => (
+          {filteredProducts.map((product, index) => (
             <motion.div
               key={product._id}
               className={`product-card ${product.stock === 0 ? "out-of-stock" : ""}`}
@@ -437,12 +447,11 @@ const Sections = () => {
                 <span className="product-price">{product.price} ر.س</span>
               </div>
               <div className="product-actions">
-                {/* 🔥 المنتج منتهي المخزون */}
                 {product.stock === 0 ? (
                   <motion.div
                     whileTap={{ scale: 0.95 }}
                     className="notify-btn"
-                    onClick={() => handleNotifyInterest(product)} // ✅ اتصال بالدالة الجديدة
+                    onClick={() => handleNotifyInterest(product)}
                   >
                     <span className="notify-text">🔔 أرغب به</span>
                   </motion.div>
@@ -450,27 +459,27 @@ const Sections = () => {
                   <motion.div
                     whileTap={{ scale: 0.9 }}
                     className="action-btn"
-                    onClick={() => handleAddToCart(product)} // ✅ تعديل: استخدم الدالة المعدلة
+                    onClick={() => handleAddToCart(product)}
                   >
                     <img src={CartIcon} alt="cart" />
                   </motion.div>
                 )}
-                {/* ❤️ المفضلة */}
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`action-btn heart ${userFavorites.includes(product._id) ? "active" : ""}`}
                   onClick={() => handleFavorite(product)}
                 >
-                  <span className="heart-symbol">
-                    {userFavorites.includes(product._id) ? "❤" : "♡"}
-                  </span>
+                  {userFavorites.includes(product._id) ? (
+                    <img src={LikeIcon} alt="liked" className="like-icon" />
+                  ) : (
+                    <span className="heart-symbol">♡</span>
+                  )}
                 </motion.div>
               </div>
             </motion.div>
           ))}
         </motion.div>
       )}
-      {/* 🌟 نافذة انضمام الزائر */}
       <AnimatePresence>
         {showAuthModal && (
           <motion.div

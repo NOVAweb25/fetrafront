@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2 } from "lucide-react";
 import { getOrders, getOrderById, updateOrder } from "../../api/api";
@@ -17,10 +17,10 @@ const AdminOrders = () => {
   const [activeStatusMenu, setActiveStatusMenu] = useState(null);
   const filterRef = useRef(null);
   const user = JSON.parse(localStorage.getItem("user"));
-
-  const SearchIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968618/search_ke1zur.svg";
-  const invoiceIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968572/invoice_kkbd8p.svg";
-
+  const SearchIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1770407020/search_wvv596.svg";
+  const invoiceIcon =
+    "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968572/invoice_kkbd8p.svg";
   const statuses = [
     "بانتظار تأكيد الطلب",
     "تم تأكيد الطلب",
@@ -29,7 +29,6 @@ const AdminOrders = () => {
     "جاهز للاستلام",
     "تم رفض الطلب",
   ];
-
   // جلب الطلبات
   const loadOrders = async (params = {}) => {
     try {
@@ -39,22 +38,18 @@ const AdminOrders = () => {
       console.error("فشل تحميل الطلبات:", err);
     }
   };
-
   useEffect(() => {
     // 🔹 عند فتح صفحة الطلبات، نعتبر التنبيهات مقروءة (حتى لو حذفت الإشعارات، ده مش متعلق مباشرة)
     window.dispatchEvent(new Event("ordersViewed"));
   }, []);
-
   useEffect(() => {
     loadOrders();
   }, []);
-
   // بحث حسب رقم الطلب
   const handleSearch = () => {
     const params = search ? { orderNumber: search } : {};
     loadOrders(params);
   };
-
   const handleShareLocation = (coords) => {
     if (!coords || coords.length !== 2) return;
     const lat = coords[1];
@@ -70,14 +65,12 @@ const AdminOrders = () => {
       window.open(url, "_blank");
     }
   };
-
   // تصفية حسب الحالة
   const handleFilter = (status) => {
     setStatusFilter(status);
     setShowFilterMenu(false);
     loadOrders({ status });
   };
-
   // فتح الفاتورة
   const openInvoice = async (orderId) => {
     try {
@@ -88,13 +81,11 @@ const AdminOrders = () => {
       console.error("فشل تحميل الفاتورة:", err);
     }
   };
-
   // إغلاق الفاتورة
   const closeInvoice = () => {
     setSelectedInvoice(null);
     setInvoiceData(null);
   };
-
   // تحديث حالة الطلب
   const updateStatus = async (orderId, newStatus) => {
     try {
@@ -105,7 +96,6 @@ const AdminOrders = () => {
       console.error("فشل تحديث الحالة:", err);
     }
   };
-
   useEffect(() => {
     const delay = setTimeout(() => {
       if (search.trim() !== "") {
@@ -116,7 +106,6 @@ const AdminOrders = () => {
     }, 500);
     return () => clearTimeout(delay);
   }, [search]);
-
   // إغلاق القوائم عند النقر خارجها
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -128,7 +117,6 @@ const AdminOrders = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   // 🟢 دالة لفتح الإيصال في تبويب جديد أو عرض الصورة داخلياً
   const openReceipt = (proofUrl) => {
     if (proofUrl.startsWith("http")) {
@@ -137,9 +125,7 @@ const AdminOrders = () => {
       window.open(`${API_BASE}${proofUrl}`, "_blank");
     }
   };
-
   console.log("🔍 API_BASE =", API_BASE);
-
   return (
     <div className="admin-page">
       <AdminSidebar />
@@ -170,7 +156,6 @@ const AdminOrders = () => {
             ))}
           </select>
         </div>
-
         {/* Orders List */}
         <div className="orders-list">
           {orders.length > 0 ? (
@@ -292,8 +277,12 @@ const AdminOrders = () => {
                   {invoiceData.shipping && (
                     <div className="client-section">
                       <h4>بيانات العميل</h4>
-                      <p><strong>الاسم:</strong> {invoiceData.shipping.name}</p>
-                      <p><strong>رقم الجوال:</strong> {invoiceData.shipping.phone}</p>
+                      <p>
+                        <strong>الاسم:</strong> {invoiceData.shipping.name}
+                      </p>
+                      <p>
+                        <strong>رقم الجوال:</strong> {invoiceData.shipping.phone}
+                      </p>
                       <p>
                         <strong>العنوان:</strong>{" "}
                         {invoiceData.shipping.city || "غير محدد"} -{" "}
@@ -314,7 +303,10 @@ const AdminOrders = () => {
                                 className="client-map"
                                 width="100%"
                                 height="180"
-                                style={{ borderRadius: "10px", marginTop: "8px" }}
+                                style={{
+                                  borderRadius: "10px",
+                                  marginTop: "8px",
+                                }}
                                 src={`https://www.google.com/maps?q=${invoiceData.shipping.coords[1]},${invoiceData.shipping.coords[0]}&hl=ar&z=15&output=embed`}
                                 allowFullScreen
                               ></iframe>
@@ -359,16 +351,24 @@ const AdminOrders = () => {
                   </div>
                   {/* 💰 المجموع */}
                   <div className="invoice-summary">
-                    <p>مجموع المنتجات: <strong>{invoiceData.subtotal} ر.س</strong></p>
-                    <p>سعر التوصيل: <strong>{invoiceData.delivery} ر.س</strong></p>
+                    <p>
+                      مجموع المنتجات:{" "}
+                      <strong>{invoiceData.subtotal} ر.س</strong>
+                    </p>
+                    <p>
+                      سعر التوصيل: <strong>{invoiceData.delivery} ر.س</strong>
+                    </p>
                     <h4>
-                      الإجمالي: <strong className="total">{invoiceData.total} ر.س</strong>
+                      الإجمالي:{" "}
+                      <strong className="total">{invoiceData.total} ر.س</strong>
                     </h4>
                   </div>
                   {/* 📎 الإيصال */}
                   {invoiceData.paymentProof && (
                     <div className="receipt-box">
-                      <p><strong>الإيصال المرفق:</strong></p>
+                      <p>
+                        <strong>الإيصال المرفق:</strong>
+                      </p>
                       {/* 🟢 مربع اسم الملف مع نقر لفتح في تبويب جديد */}
                       <div
                         className="receipt-file"
@@ -388,5 +388,4 @@ const AdminOrders = () => {
     </div>
   );
 };
-
 export default AdminOrders;

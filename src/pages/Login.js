@@ -4,78 +4,69 @@ import { motion, AnimatePresence } from "framer-motion";
 import { loginUser } from "../api/api";
 import { colors, fonts, fontSizes, buttonSizes } from "../utils/theme";
 
-
 const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const [hoverBack, setHoverBack] = useState(false);
-    const [alertMessage, setAlertMessage] = useState("");
-const backgroundVideo = "https://res.cloudinary.com/dp1bxbice/video/upload/v1763968598/background_y4wbuh.mp4";
-const backIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1763968570/home_sngijz.svg";
+  const [alertMessage, setAlertMessage] = useState("");
+  const backgroundVideo = "https://res.cloudinary.com/dp1bxbice/video/upload/v1770408547/login_lp7jjm.mp4";
+  const backIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770406972/home_jgi9rf.svg";
 
-useEffect(() => {
-  return () => {
-    // يلغي أي تايمر قبل مغادرة الصفحة
-    setAlertMessage("");
-  };
-}, []);
+  useEffect(() => {
+    return () => {
+      // يلغي أي تايمر قبل مغادرة الصفحة
+      setAlertMessage("");
+    };
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-const showAlert = (msg) => {
-  setAlertMessage(msg);
-  setTimeout(() => setAlertMessage(""), 2500);
-};
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const showAlert = (msg) => {
+    setAlertMessage(msg);
+    setTimeout(() => setAlertMessage(""), 2500);
+  };
 
-  // ✅ تحقق من الحقول قبل الإرسال
-  if (!form.username.trim()) {
-    showAlert("⚠️ يرجى كتابة اسم المستخدم");
-    return;
-  }
-  if (!form.password.trim()) {
-    showAlert("⚠️ يرجى تسجيل كلمة المرور");
-    return;
-  }
-
-  try {
-    const res = await loginUser(form);
-    const user = res.data.user;
-
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", JSON.stringify(user));
-
-    window.dispatchEvent(new Event("authChange"));
-
-    if (user.role === "admin") {
-      navigate("/admin/stats");
-    } else {
-      navigate("/");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // ✅ تحقق من الحقول قبل الإرسال
+    if (!form.username.trim()) {
+      showAlert("⚠️ يرجى كتابة اسم المستخدم");
+      return;
     }
-  } catch (err) {
-    if (err.response) {
-      const status = err.response.status;
-      const message = err.response.data?.message || "";
-
-      // ✅ مطابقة رسائل الكنترول
-      if (status === 404 || message.includes("User not found")) {
-        showAlert("! اسم المستخدم أو كلمة المرور غير صحيحة");
-      } else if (status === 401 || message.includes("Invalid credentials")) {
-        showAlert("! اسم المستخدم أو كلمة المرور غير صحيحة");
+    if (!form.password.trim()) {
+      showAlert("⚠️ يرجى تسجيل كلمة المرور");
+      return;
+    }
+    try {
+      const res = await loginUser(form);
+      const user = res.data.user;
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      window.dispatchEvent(new Event("authChange"));
+      if (user.role === "admin") {
+        navigate("/admin/stats");
       } else {
-        showAlert("! حدث خطأ أثناء تسجيل الدخول");
+        navigate("/");
       }
-    } else {
-      showAlert("لا يمكن الاتصال بالخادم الآن");
+    } catch (err) {
+      if (err.response) {
+        const status = err.response.status;
+        const message = err.response.data?.message || "";
+        // ✅ مطابقة رسائل الكنترول
+        if (status === 404 || message.includes("User not found")) {
+          showAlert("! اسم المستخدم أو كلمة المرور غير صحيحة");
+        } else if (status === 401 || message.includes("Invalid credentials")) {
+          showAlert("! اسم المستخدم أو كلمة المرور غير صحيحة");
+        } else {
+          showAlert("! حدث خطأ أثناء تسجيل الدخول");
+        }
+      } else {
+        showAlert("لا يمكن الاتصال بالخادم الآن");
+      }
     }
-  }
-};
-
-
-
+  };
 
   return (
     <div style={styles.container}>
@@ -83,19 +74,21 @@ const handleSubmit = async (e) => {
       <video autoPlay loop muted playsInline style={styles.video}>
         <source src={backgroundVideo} type="video/mp4" />
       </video>
-<AnimatePresence>
-  {alertMessage && (
-    <motion.div
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -60, opacity: 0 }}
-      transition={{ duration: 0.4 }}
-      style={styles.toast}
-    >
-      {alertMessage}
-    </motion.div>
-  )}
-</AnimatePresence>
+
+      <AnimatePresence>
+        {alertMessage && (
+          <motion.div
+            initial={{ y: -60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -60, opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            style={styles.toast}
+          >
+            {alertMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* 🪟 كارت تسجيل الدخول */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -105,25 +98,24 @@ const handleSubmit = async (e) => {
       >
         {/* 🔙 زر العودة */}
         <Link
-  to="/"
-  style={{
-    ...styles.back,
-    backgroundColor: hoverBack ? "#a0bebf" : "#a0bebf", // لون أغمق عند hover
-  }}
-  onMouseEnter={() => setHoverBack(true)}
-  onMouseLeave={() => setHoverBack(false)}
->
-  <img
-    src={backIcon}
-    alt="Back"
-    style={{
-      ...styles.backIcon,
-      transform: hoverBack ? "rotateY(180deg)" : "rotateY(0deg)",
-    }}
-  />
-  <span>عودة</span>
-</Link>
-
+          to="/"
+          style={{
+            ...styles.back,
+            backgroundColor: hoverBack ? '#02251A' : '#145032', // ← Lush Forest Green أساسي، hover غامق
+          }}
+          onMouseEnter={() => setHoverBack(true)}
+          onMouseLeave={() => setHoverBack(false)}
+        >
+          <img
+            src={backIcon}
+            alt="Back"
+            style={{
+              ...styles.backIcon,
+              transform: hoverBack ? "rotateY(180deg)" : "rotateY(0deg)",
+            }}
+          />
+          <span>عودة</span>
+        </Link>
 
         <h2 style={styles.title}>تسجيل الدخول</h2>
 
@@ -146,12 +138,13 @@ const handleSubmit = async (e) => {
             required
             style={styles.input}
           />
-
           {/* زر حديث مع أنيميشن */}
           <motion.button
             type="submit"
             style={styles.button}
-                      >
+            whileHover={{ scale: 1.05, backgroundColor: '#A52A2A' }} // hover أحمر
+            whileTap={{ scale: 0.95 }}
+          >
             دخول
           </motion.button>
         </form>
@@ -190,93 +183,98 @@ const styles = {
     objectFit: "cover",
     zIndex: -1,
   },
- card: {
-  background: "rgba(160, 190, 191, 0.22)", // ← #a0bebf مع شفافية ممتازة للزجاج
-  backdropFilter: "blur(10px)",
-  WebkitBackdropFilter: "blur(10px)",
-  padding: "30px 20px",
-  borderRadius: "16px",
-  textAlign: "center",
-  width: "90%",
-  maxWidth: "340px",
-  boxShadow: "0 8px 24px rgba(0,0,0,0.35)", // ظل أنعم يناسب اللون
-  position: "relative",
-  zIndex: 1,
-  border: "1px solid rgba(255,255,255,0.35)", // يعطي إيحاء زجاج
-},
-
-
-
-toast: {
-  position: "fixed",
-  top: "20px",
-  left: "50%",
-  transform: "translateX(-50%)",
-  background: "#d15c1d",
-  color: "#f1ebcc",
-  padding: "10px 20px",
-  borderRadius: "30px",
-  fontWeight: "600",
-  fontSize: "14px",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-  zIndex: 2000,
-},
-
-
+  card: {
+    background: "rgba(20, 80, 50, 0.22)", // ← Lush Forest Green #145032 مع شفافية زجاجية
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    padding: "30px 20px",
+    borderRadius: "16px",
+    textAlign: "center",
+    width: "90%",
+    maxWidth: "340px",
+    boxShadow: "0 8px 24px rgba(2, 37, 26, 0.35)", // ظل غامق غابي
+    position: "relative",
+    zIndex: 1,
+    border: "1px solid rgba(20, 80, 50, 0.35)", // حدود خضراء خفيفة
+  },
+  toast: {
+    position: "fixed",
+    top: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "#A52A2A", // ← Red Fungus للتنبيهات
+    color: "#FFFFFF",
+    padding: "10px 20px",
+    borderRadius: "30px",
+    fontWeight: "600",
+    fontSize: "14px",
+    boxShadow: "0 4px 12px rgba(2, 37, 26, 0.2)", // ظل غابي
+    zIndex: 2000,
+  },
   title: {
     fontFamily: fonts.secondary,
-    color: "#f2a72d",
+    color: "#E1B866", // ← Sunlit Yellow للعنوان جذاب
     fontSize: fontSizes.title,
     marginBottom: "20px",
   },
-  form: { display: "flex", flexDirection: "column", gap: "12px" },
+  form: { 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: "12px" 
+  },
   input: {
     padding: "12px",
     borderRadius: "30px",
-    border: "none",
+    border: "1px solid #145032", // ← Lush Forest Green للحدود
     outline: "none",
     fontSize: fontSizes.content,
     fontFamily: fonts.primary,
+    backgroundColor: "#02251A", // ← Deep Jungle Green للخلفية غامقة
+    color: "#E1B866", // نص أصفر للقراءة
+    transition: "border 0.3s ease",
+    ':focus': { border: "1px solid #FF7518" } // focus برتقالي
   },
   button: {
     ...buttonSizes.medium,
     width: "100%",
-    backgroundColor: "#6b7f4f",
-    color: "#f1ebcc",
+    backgroundColor: "#FF7518", // ← Orange Mushroom للزر CTA
+    color: "#FFFFFF",
     border: "none",
     borderRadius: "30px",
     cursor: "pointer",
     marginTop: "10px",
+    transition: "all 0.3s ease",
   },
   registerText: {
     marginTop: "18px",
     fontSize: fontSizes.link,
-    color: "#f1ebcc",
+    color: "#FFFFFF", // أبيض للنص
     lineHeight: 1.4,
   },
   registerLink: {
-    color: "#a0bebf",
+    color: "#4B0082", // ← Purple Jungle Bloom للرابط ساحر
     fontWeight: "bold",
     textDecoration: "underline",
+    transition: "color 0.3s ease",
+    ':hover': { color: "#A52A2A" } // hover أحمر للإثارة
   },
   back: {
-  position: "absolute",
-  top: "8px",
-  right: "8px",
-  display: "flex",
-  alignItems: "center",
-  gap: "6px",
-  padding: "6px 10px",
-  borderRadius: "30px",
-  cursor: "pointer",
-  textDecoration: "none",
-  color: "#493c33",                // خلي النص أبيض
-  fontWeight: "bold",
-  fontSize: "14px",
-  backgroundColor: "#d15c1d", // اللون الأساسي
-  transition: "all 0.3s ease",
-},
-
+    position: "absolute",
+    top: "8px",
+    right: "8px",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "6px 10px",
+    borderRadius: "30px",
+    cursor: "pointer",
+    textDecoration: "none",
+    color: "#FFFFFF", // نص أبيض
+    fontWeight: "bold",
+    fontSize: "14px",
+    backgroundColor: "#145032", // ← Lush Forest Green أساسي
+    transition: "all 0.3s ease",
+  },
   backIcon: {
     width: "20px",
     height: "20px",

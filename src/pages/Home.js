@@ -3,28 +3,25 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { colors, fonts, fontSizes, buttonSizes } from "../utils/theme";
 
-
 const Home = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-
+  
   useEffect(() => {
     const handleStorageChange = () => {
       const savedUser = JSON.parse(localStorage.getItem("user"));
       setUser(savedUser);
     };
-
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
-
+  
   return (
     <div style={styles.container}>
-      {/* 🎥 خلفية الفيديو */}
-    <video autoPlay loop muted playsInline style={styles.video}>
-  <source src="https://res.cloudinary.com/dp1bxbice/video/upload/v1763968652/autumn_vqplhl.mp4" type="video/mp4" />
-</video>
-
-
+      {/* 🎥 خلفية الفيديو – اقترح تغييرها إلى فيديو غابي أكثر إذا أمكن */}
+      <video autoPlay loop muted playsInline style={styles.video}>
+        <source src="https://res.cloudinary.com/dp1bxbice/video/upload/v1770406920/background_yzcuf7.mp4" />
+      </video>
+      
       {/* 🌫️ الطبقة الشفافة والمحتوى */}
       <div style={styles.overlay}>
         <motion.div
@@ -35,31 +32,32 @@ const Home = () => {
         >
           {/* 👋 رسالة ترحيب */}
           <h1 style={styles.title}>
-            {user ? `🌿 مرحبًا بك ${user.firstName}` : "🌿 مرحبًا بك في موقعنا"}
+            {user ? ` نوّرت ارضك ${user.firstName}` : " فن يبحث عن صاحبها, تُكمل رحلتك، وتعبّر عن جزءٍ منك, اكتشف ما ينتمي لك"}
           </h1>
-
+          
           {/* 🔗 زر تسجيل الدخول */}
           {!user && (
-           <button
-  style={styles.button}
-  onClick={() => {
-    const section = document.getElementById("sections");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  }}
->
-  🌿 ابدأ رحلتك
-</button>
-
+            <button
+              style={styles.button}
+              onClick={() => {
+                const section = document.getElementById("sections");
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              onMouseEnter={(e) => { e.target.style.backgroundColor = '#A52A2A'; e.target.style.transform = 'scale(1.05)'; }}
+              onMouseLeave={(e) => { e.target.style.backgroundColor = '#FF7518'; e.target.style.transform = 'scale(1)'; }}
+            >
+               ابدأ رحلتك
+            </button>
           )}
-
+          
           {/* رابط التسجيل */}
           {!user && (
             <p style={styles.text}>
               ليس لديك حساب؟{" "}
               <Link to="/register" style={styles.link}>
-                سجل حسابك
+                انضم لنا
               </Link>
             </p>
           )}
@@ -72,9 +70,7 @@ const Home = () => {
 export default Home;
 
 const styles = {
-
   container: {
-       
     position: "relative",
     width: "100%",
     height: "100vh",
@@ -94,46 +90,46 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "rgba(0,0,0,0.4)",
+    background: "rgba(2, 37, 26, 0.4)", // ← من Deep Jungle Green #02251A لعمق غابي
   },
   contentBox: {
-  textAlign: "center",
-  backgroundColor: "rgba(160, 190, 191, 0.25)", // ← #a0bebf بنسبة شفافية
-  padding: "30px 40px",
-  borderRadius: "30px",
-  backdropFilter: "blur(6px)",
-  WebkitBackdropFilter: "blur(6px)", // للـ Safari
-  boxShadow: "0 8px 20px rgba(0,0,0,0.25)", // ظل ناعم يناسب الزجاج
-  border: "1px solid rgba(255,255,255,0.3)", // يعطي إحساس زجاج أكثر
-},
-
+    textAlign: "center",
+    backgroundColor: "rgba(20, 80, 50, 0.25)", // ← من Lush Forest Green #145032 بنسبة شفافية
+    padding: "30px 40px",
+    borderRadius: "30px",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)", // للـ Safari
+    boxShadow: "0 8px 20px rgba(20, 80, 50, 0.25)", // ظل أخضر ناعم
+    border: "1px solid rgba(20, 80, 50, 0.3)", // حدود خضراء خفيفة
+  },
   title: {
-    color: "#f2a72d",
+    color: "#E1B866", // ← Sunlit Yellow لبريق مشمس جذاب
     fontFamily: fonts.secondary,
     fontSize: fontSizes.title,
     marginBottom: "20px",
   },
-
   button: {
     ...buttonSizes.medium,
-    backgroundColor: "#6b7f4f",
-    color: "#f1ebcc",
+    backgroundColor: "#FF7518", // ← Orange Mushroom لجذب الفعل (CTA)
+    color: "#FFFFFF", // أبيض لتباين عالي
     border: "none",
+       borderColor: "fff",
     borderRadius: "30px",
     cursor: "pointer",
-    textDecoration: "none",
     display: "inline-block",
     marginTop: "10px",
-    transition: "all 0.3s ease",
+    transition: "all 0.3s ease", // لتأثير hover سلس
   },
   link: {
-    color: "#a0bebf",
+    color: "#4B0082", // ← Purple Jungle Bloom لروابط ساحرة تجذب المتابعة
     textDecoration: "underline",
     fontSize: fontSizes.link,
+    transition: "color 0.3s ease",
+    ':hover': { color: "#A52A2A" }, // hover إلى Red Fungus لإثارة
   },
   text: {
     marginTop: "15px",
-    color:"#f1ebcc",
+    color: "#FFFFFF", // أبيض لقراءة سهلة على خلفية غابية
     fontSize: fontSizes.content,
   },
 };
