@@ -5,7 +5,6 @@
   font-family: "Tajawal", sans-serif;
   border-top: 1px solid rgba(20, 80, 50, 0.1); /* حدود خضراء خفيفة */
 }
-
 /* ✅ القسم العلوي (روابط يمين ويسار) */
 .footer-top {
   display: flex;
@@ -14,45 +13,37 @@
   flex-wrap: wrap;
   gap: 40px;
 }
-
 .footer-section {
   flex: 1;
   min-width: 200px;
 }
-
 .footer-title {
   font-size: 1.1rem;
   margin-bottom: 12px;
   color: #E1B866; /* ← Sunlit Yellow للعناوين بارزة */
   font-weight: 600;
 }
-
 .footer-section ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .footer-section li {
   margin-bottom: 8px;
 }
-
 .footer-section a {
   color: #FFFFFF; /* أبيض للروابط لقراءة سهلة */
   text-decoration: none;
   transition: color 0.3s ease;
 }
-
 .footer-section a:hover {
   color: #A52A2A; /* ← Red Fungus لـ hover جذاب */
 }
-
 /* ✅ القسم السفلي (الشعار والنبذة) */
 .footer-bottom {
   text-align: center;
   margin-top: 50px;
 }
-
 .footer-logo-circle {
   width: 100px;
   height: 100px;
@@ -69,7 +60,6 @@
     0 0 30px rgba(255, 117, 24, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .footer-logo-circle:hover {
   transform: scale(1.05);
   /* توهج أقوى عند hover */
@@ -78,19 +68,18 @@
     0 0 30px rgba(255, 117, 24, 0.7),
     0 0 45px rgba(255, 117, 24, 0.6);
 }
-
 .footer-logo {
   width: 100%;
-  height: auto;
+  height: 100%; /* ← غير height إلى 100% لملء الدائرة تماماً */
+  object-fit: cover; /* ← أضف هذا لضمان أن الصورة تتناسب دون تشويه */
+  border-radius: 50%; /* ← أضف border-radius لجعل الصورة دائرية تماماً */
 }
-
 .footer-slogan {
   font-size: 1rem;
   margin-bottom: 10px;
   color: #E1B866; /* ← Sunlit Yellow للسلوغان */
   font-weight: 500;
 }
-
 .footer-about {
   font-size: 0.9rem;
   color: #FFFFFF; /* أبيض للنبذة لقراءة سهلة */
@@ -98,7 +87,6 @@
   max-width: 400px;
   margin: 0 auto;
 }
-
 /* ─────────────── */
 /* ⭐ نبذة عنا */
 /* ─────────────── */
@@ -106,27 +94,23 @@
   text-align: center;
   margin-bottom: 40px;
 }
-
 .about-title {
   font-size: 1.3rem;
   color: #E1B866; /* ← Sunlit Yellow للعنوان */
   margin-bottom: 10px;
 }
-
 /* ─────────────── */
 /* ⭐ تابعنا على */
 /* ─────────────── */
 .social-links {
   text-align: center;
 }
-
 .social-icons-row {
   display: flex;
   gap: 15px;
   justify-content: center;
   margin-top: 10px;
 }
-
 .social-icon-circle {
   width: 50px;
   height: 50px;
@@ -143,7 +127,6 @@
   cursor: pointer;
   transition: 0.3s ease;
 }
-
 .social-icon-circle:hover {
   transform: scale(1.1);
   /* توهج أقوى عند hover */
@@ -152,11 +135,9 @@
     0 0 30px rgba(255, 117, 24, 0.7),
     0 0 45px rgba(255, 117, 24, 0.6);
 }
-
 .social-icon-circle img {
   width: 55%;
 }
-
 /* ─────────────── */
 /* ⭐ تواصل معنا */
 /* ─────────────── */
@@ -164,7 +145,6 @@
   margin-top: 40px;
   text-align: center;
 }
-
 .contact-row {
   display: flex;
   justify-content: center;
@@ -173,7 +153,6 @@
   cursor: pointer;
   margin-top: 10px;
 }
-
 .contact-icon-circle {
   width: 45px;
   height: 45px;
@@ -189,7 +168,6 @@
   align-items: center;
   transition: 0.3s ease;
 }
-
 .contact-icon-circle:hover {
   transform: scale(1.1);
   /* توهج أقوى عند hover */
@@ -198,21 +176,17 @@
     0 0 30px rgba(255, 117, 24, 0.7),
     0 0 45px rgba(255, 117, 24, 0.6);
 }
-
 .contact-icon-circle img {
   width: 50%;
 }
-
 .contact-email {
   color: #FFFFFF; /* أبيض للإيميل */
   font-size: 1rem;
   transition: color 0.3s ease;
 }
-
 .contact-email:hover {
   color: #4B0082; /* ← Purple Jungle Bloom لـ hover ساحر */
 }
-
 /* ─────────────── */
 /* ⭐ الجوال */
 /* ─────────────── */

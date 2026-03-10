@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getSections,
@@ -53,26 +53,7 @@ const Sections = () => {
     if (id.$oid) return id.$oid;
     return id.toString();
   };
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const res = await getSections();
-        const data = res.data.map((s) => ({
-          ...s,
-          mainImage: s.mainImage?.startsWith("http")
-            ? s.mainImage
-            : `${API_BASE}${s.mainImage}`,
-        }));
-        setSections(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-  useEffect(() => {
+    useEffect(() => {
     if (!userId) return;
     (async () => {
       try {
@@ -85,45 +66,7 @@ const Sections = () => {
       }
     })();
   }, [userId]);
-  useEffect(() => {
-    if (!selectedSection) return;
-    (async () => {
-      setLoading(true);
-      try {
-        const res = await getCategories();
-        const filtered = res.data.filter(
-          (c) => normalizeId(c.section?._id || c.section) === normalizeId(selectedSection._id)
-        );
-        setCategories(filtered);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [selectedSection]);
-  useEffect(() => {
-    const fetchProducts = async () => {
-      if (!selectedSection) return;
-      setLoading(true);
-      try {
-        const res = await getProducts({ sectionId: normalizeId(selectedSection._id) });
-        const data = res.data
-          .map((p) => ({
-            ...p,
-            mainImage: getImageUrl(p.mainImage),
-            stock: p.stock ?? 0,
-          }));
-        setProducts(data);
-      } catch (err) {
-        console.error("Error loading section products:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [selectedSection]);
-  const handleSectionSelect = (section) => {
+     const handleSectionSelect = (section) => {
     const id = normalizeId(section._id);
     setSelectedSection(section);
     setSelectedCategory(null);
@@ -170,64 +113,80 @@ const Sections = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const sectionId = params.get("sectionId");
-    const categoryId = params.get("categoryId");
-    if (!sectionId || sections.length === 0) return;
-    const foundSection = sections.find(
-      (s) => normalizeId(s._id) === normalizeId(sectionId)
-    );
-    if (!foundSection) return;
-    setSelectedSection(foundSection);
-    (async () => {
-      const res = await getCategories();
-      const cats = res.data.filter(
-        (c) => normalizeId(c.section) === normalizeId(sectionId)
-      );
-      setCategories(cats);
-      if (categoryId) {
-        const foundCat = cats.find(
-          (c) => normalizeId(c._id) === normalizeId(categoryId)
-        );
-        if (foundCat) setSelectedCategory(foundCat);
-        loadProducts(sectionId, categoryId);
-      } else {
-        loadProducts(sectionId);
+ 
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // تحميل الأقسام إذا لم تكن محملة
+      if (sections.length === 0) {
+        const resSections = await getSections();
+        const dataSections = resSections.data.map((s) => ({
+          ...s,
+          mainImage: s.mainImage?.startsWith("http") ? s.mainImage : `${API_BASE}${s.mainImage}`,
+        }));
+        setSections(dataSections);
       }
-    })();
-  }, [sections, location]);
-  useEffect(() => {
-    const fetchAllProducts = async () => {
-      if (selectedSection) return;
-      setLoading(true);
-      try {
-        const res = await getProducts({});
-        const data = res.data.map((p) => ({
+
+      const params = new URLSearchParams(location.search);
+      const sectionId = params.get("sectionId");
+      const categoryId = params.get("categoryId");
+
+      let currentSection = selectedSection;
+      if (sectionId && sections.length > 0) {
+        currentSection = sections.find((s) => normalizeId(s._id) === normalizeId(sectionId));
+        if (currentSection) setSelectedSection(currentSection);
+      }
+
+      // تحميل التصنيفات إذا كان هناك قسم
+      if (currentSection) {
+        const resCats = await getCategories();
+        const filteredCats = resCats.data.filter(
+          (c) => normalizeId(c.section?._id || c.section) === normalizeId(currentSection._id)
+        );
+        setCategories(filteredCats);
+
+        if (categoryId) {
+          const foundCat = filteredCats.find((c) => normalizeId(c._id) === normalizeId(categoryId));
+          if (foundCat) setSelectedCategory(foundCat);
+        }
+
+        // تحميل المنتجات بناءً على القسم/التصنيف
+        await loadProducts(normalizeId(currentSection._id), categoryId ? normalizeId(categoryId) : null);
+      } else {
+        // تحميل كل المنتجات إذا لم يكن هناك قسم
+        const resProducts = await getProducts({});
+        const dataProducts = resProducts.data.map((p) => ({
           ...p,
           mainImage: getImageUrl(p.mainImage),
           stock: p.stock ?? 0,
         }));
-        setProducts(data);
-      } catch (err) {
-        console.error("Error loading all products:", err);
-      } finally {
-        setLoading(false);
+        setProducts(dataProducts);
       }
-    };
-    fetchAllProducts();
-  }, [selectedSection]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [location, selectedSection, sections.length]);  // التبعيات: التغييرات في الموقع أو القسم 
+
   const filteredSections = sections.filter(
     (section) =>
       section.name.toLowerCase().includes(search.toLowerCase()) ||
       section.description?.toLowerCase().includes(search.toLowerCase())
   );
   // ✅ إضافة فلترة للمنتجات بناءً على البحث
-  const filteredProducts = products.filter(
+const filteredProducts = useMemo(() => {
+  return products.filter(
     (product) =>
       product.name.toLowerCase().includes(search.toLowerCase()) ||
       product.description?.toLowerCase().includes(search.toLowerCase())
   );
+}, [products, search]);
+
   const handleFavorite = async (product) => {
     if (!userId) {
       setShowAuthModal(true);
@@ -374,6 +333,7 @@ const Sections = () => {
                 src={getImageUrl(section.mainImage)}
                 alt={section.name}
                 className="section-image"
+                loading="lazy"
                 onError={(e) => (e.target.src = "/fallback.png")}
               />
             </div>
@@ -439,6 +399,7 @@ const Sections = () => {
                   src={getImageUrl(product.mainImage)}
                   alt={product.name}
                   className="product-image"
+                  loading="lazy"
                   onError={(e) => (e.target.src = "/fallback.png")}
                 />
               </div>
@@ -521,4 +482,4 @@ const Sections = () => {
     </div>
   );
 };
-export default Sections;
+export default React.memo(Sections);

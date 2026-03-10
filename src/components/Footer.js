@@ -6,7 +6,11 @@ const Footer = () => {
 const tiktokIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411203/tiktok_hqxvul.svg";
 const emailIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411104/email_moubhm.svg";
 const instaIcon= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770411134/instagram_iyppcd.svg";
-const logo= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770561234/logo_fetra_lmhd5m.svg";
+const logo= "https://res.cloudinary.com/dp1bxbice/image/upload/v1773124728/Gemini_Generated_Image_hupcf4hupcf4hupc_yndhdc.png";
+  // دالة للتمرير إلى الأعلى عند التنقل
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
   return (
     <footer className="footer-container">
       {/* ─────── 📌 القسم الأول: نبذة عنا ─────── */}
@@ -16,7 +20,7 @@ const logo= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770561234/logo_
         </div>
         <h3 className="footer-title about-title">نبذة عنا</h3>
         <p className="footer-about">
-          فطرة  تعكس رؤيتي الداخلية للعالم، مستوحاة من سحر الطبيعة والغابات العميقة، خاصة الفطر السحري الذي يرمز إلى الغموض والاكتشاف. كفنانة، أصمم أعمالي اليدوية بالكروشيه باستخدام خيوط قطنية طبيعية، لتعبر عن تقديري للطبيعة ومبادئي البيئية. كل قطعة فريدة، غير مكررة بكميات كبيرة، بل هي فكرة خاصة توصل شعورًا مميزًا وتجربة ساحرة.
+          فطرة تعكس رؤيتي الداخلية للعالم، مستوحاة من سحر الطبيعة والغابات العميقة، خاصة الفطر السحري الذي يرمز إلى الغموض والاكتشاف. كفنانة، أصمم أعمالي اليدوية بالكروشيه باستخدام خيوط قطنية طبيعية، لتعبر عن تقديري للطبيعة ومبادئي البيئية. كل قطعة فريدة، غير مكررة بكميات كبيرة، بل هي فكرة خاصة توصل شعورًا مميزًا وتجربة ساحرة.
  أعمالي ليست مجرد منتجات، بل قطع فنية تعكس ألوان الطبيعة وأشكالها، لتدخل سحر الغابة إلى حياتك اليومية.
         </p>
       </div>
@@ -46,11 +50,11 @@ const logo= "https://res.cloudinary.com/dp1bxbice/image/upload/v1770561234/logo_
         <div className="footer-section important-links">
           <h4 className="footer-title">روابط تهمك</h4>
           <ul>
-            <li><Link to="/privacy-policy">سياسة الخصوصية</Link></li>
-            <li><Link to="/terms">الشروط والأحكام</Link></li>
-            <li><Link to="/payment-policy">سياسة الدفع</Link></li>
-            <li><Link to="/return-policy">سياسة الاسترجاع والاستبدال</Link></li>
-            <li><Link to="/order-policy">سياسة الطلب</Link></li>
+            <li><Link to="/privacy-policy" onClick={scrollToTop}>سياسة الخصوصية</Link></li>
+            <li><Link to="/terms" onClick={scrollToTop}>الشروط والأحكام</Link></li>
+            <li><Link to="/payment-policy" onClick={scrollToTop}>سياسة الدفع</Link></li>
+            <li><Link to="/return-policy" onClick={scrollToTop}>سياسة الاسترجاع والاستبدال</Link></li>
+            <li><Link to="/order-policy" onClick={scrollToTop}>سياسة الطلب</Link></li>
           </ul>
         </div>
       </div>

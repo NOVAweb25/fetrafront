@@ -10,7 +10,7 @@ const ClientNavbar = () => {
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const accountIcon = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770408843/person_zemcya.svg";
-  const logo = "https://res.cloudinary.com/dp1bxbice/image/upload/v1770574166/logo_fetra_abjgay.gif";
+  const logo = "https://res.cloudinary.com/dp1bxbice/image/upload/v1773124728/Gemini_Generated_Image_hupcf4hupcf4hupc_yndhdc.png";
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     if (savedUser) setUser(savedUser);
@@ -221,6 +221,7 @@ const ClientNavbar = () => {
 };
 export default ClientNavbar;
 const styles = {
+ 
   navbar: {
     position: "fixed",
     top: 0,
@@ -230,17 +231,19 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    background: "rgba(2, 37, 26, 0.08)", // ← Deep Jungle Green شفاف لعمق غابي
+    background: "rgba(2, 37, 26, 0.08)",
     backdropFilter: "blur(16px)",
-    borderBottom: "1px solid rgba(20, 80, 50, 0.15)", // حدود خضراء خفيفة
-    boxShadow: "0 4px 12px rgba(20, 80, 50, 0.15)", // ظل غابي
+    borderBottom: "1px solid rgba(20, 80, 50, 0.15)",
+    boxShadow: "0 4px 12px rgba(20, 80, 50, 0.15)",
     zIndex: 1000,
-    padding: "0 20px", // ← قلل الـ padding اليميني لإعطاء مساحة أكبر
+    padding: "0 20px 0 20px", // ← احتفظ بالـ padding، أو قلل اليميني إلى 10px إذا أردت
   },
   logoContainer: {
     display: "flex",
     alignItems: "center",
+    transform: "translateX(-20px)", // ← أضف هذا لتحريك الشعار يساراً (زد إلى -30px أو أكثر إذا أردت حركة أقوى)
   },
+  
   logoCircle: {
     width: "70px",
     height: "70px",
